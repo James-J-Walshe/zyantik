@@ -1,0 +1,313 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #E1E1E1;
+  color: #1C110A;
+  line-height: 1.6;
+}
+
+/* Flex layout applied to wrapper instead of body/html */
+#page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  background-color: #1C110A;
+  padding: 0.5rem 2rem;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header .logo {
+  max-height: 50px;
+  width: auto;
+  margin: 0;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+header .logo:hover {
+  transform: scale(1.05);
+}
+
+nav {
+  background-color: transparent;
+  display: flex;
+  gap: 2rem;
+}
+
+nav a {
+  color: #E1E1E1;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: #ED4D6E;
+}
+
+nav a.active {
+  border-bottom: 2px solid #ED4D6E;
+}
+
+/* Responsive Header */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  nav {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+}
+
+/* Container */
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 2rem;
+  background: #E1E1E1;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+/* Footer */
+footer {
+  flex-shrink: 0;
+  padding: 1rem;
+  background-color: #4B538C;
+  color: white;
+  text-align: center;
+}
+
+h1, h2, h3 {
+  color: #4B538C;
+  margin-bottom: 0.5rem;
+}
+
+ul {
+  padding-left: 1.2rem;
+}
+
+/* ========================= */
+/* CONTACT PAGE + FORM STYLES*/
+/* ========================= */
+.contact-details p, .contact-purpose ul {
+  margin: 1rem 0;
+}
+
+.contact-purpose ul {
+  list-style: none;
+  padding: 0;
+}
+
+.contact-purpose ul li a {
+  color: #4B538C;
+  text-decoration: underline;
+}
+
+.contact-form input,
+.contact-form textarea,
+.contact-form select {
+  width: 50%;
+  padding: 0.5rem;
+  font-family: 'Montserrat', sans-serif;
+  border: 1px solid #A4A8C4;
+  border-radius: 4px;
+  background-color: white;
+  color: #1C110A;
+}
+
+@media (max-width: 768px) {
+  .contact-form input,
+  .contact-form textarea,
+  .contact-form select {
+    width: 100%;
+  }
+}
+
+.contact-form button {
+  padding: 0.7rem 1.5rem;
+  background-color: #4B538C;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.contact-form button:hover {
+  background-color: #ED4D6E;
+}
+
+/* Dropdown */
+.contact-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* ========================= */
+/* SERVICES PAGE + CARDS     */
+/* ========================= */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.service-card {
+  background-color: white;
+  padding: 1.5rem;
+  border: 1px solid #A4A8C4;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 260px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card h3 {
+  margin-top: 0;
+  color: #4B538C;
+  font-size: 1.2rem;
+}
+
+.service-card p {
+  flex-grow: 1;
+  margin: 1rem 0;
+  color: #1C110A;
+  font-size: 0.95rem;
+}
+
+.service-card a {
+  font-weight: 600;
+  color: #4B538C;
+  text-decoration: none;
+  align-self: start;
+  transition: color 0.3s ease;
+}
+
+.service-card a:hover {
+  color: #ED4D6E;
+  text-decoration: underline;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+@media (max-width: 600px) {
+  .service-card {
+    min-height: auto;
+  }
+}
+
+/* ========================= */
+/* BUTTONS                   */
+/* ========================= */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.custom-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #4B538C;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 3rem;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.custom-btn:hover {
+  background-color: #ED4D6E;
+}
+
+/* ========================= */
+/* PRODUCTS PAGE             */
+/* ========================= */
+.products-section {
+  padding: 2rem 0;
+}
+
+.products-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: left;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.product-card h3 {
+  color: #4B538C;
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+}
+
+.product-card p {
+  color: #1C110A;
+  margin-bottom: 1.2rem;
+  line-height: 1.5;
+}
+
+.product-card .btn {
+  display: inline-block;
+  background: #ED4D6E;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.product-card .btn:hover {
+  background: #c73c59;
+}
