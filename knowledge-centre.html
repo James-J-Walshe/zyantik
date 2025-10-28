@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Centre - Zyantik Project Estimating Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Page-specific styles for knowledge centre */
+        body {
+            background: var(--bg-secondary);
+        }
+
+        .top-nav-right {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--bg-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            gap: 0.5rem;
+        }
+
+        .search-box input {
+            border: none;
+            background: none;
+            outline: none;
+            font-size: 0.9rem;
+            width: 200px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            max-width: 1600px;
+            margin: 80px auto 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            background: var(--bg-primary);
+            padding: 2rem 0;
+            border-right: 1px solid var(--border-color);
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-medium);
+            padding: 0 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .sidebar-links {
+            list-style: none;
+        }
+
+        .sidebar-links li {
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-links a {
+            display: block;
+            padding: 0.6rem 1.5rem;
+            text-decoration: none;
+            color: var(--text-light);
+            transition: all var(--transition-fast);
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-links a:hover {
+            background: var(--bg-secondary);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .sidebar-links a.active {
+            background: var(--bg-secondary);
+            color: var(--primary-color);
+            font-weight: 600;
+            border-left-color: var(--primary-color);
+        }
+
+        .main-content {
+            padding: 3rem 4rem;
+            background: var(--bg-primary);
+        }
+
+        .content-header {
+            margin-bottom: 3rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .content-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .content-description {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .article-card {
+            cursor: pointer;
+        }
+
+        .article-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .article-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-medium);
+        }
+
+        .doc-content {
+            max-width: 900px;
+        }
+
+        .doc-content h2 {
+            font-size: 2rem;
+            margin: 2.5rem 0 1.5rem;
+            color: var(--text-dark);
+            border-bottom: 2px solid var(--bg-secondary);
+            padding-bottom: 0.5rem;
+        }
+
+        .doc-content h3 {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            color: var(--text-dark);
+        }
+
+        .doc-content h4 {
+            font-size: 1.2rem;
+            margin: 1.5rem 0 0.75rem;
+            color: var(--text-dark);
+        }
+
+        .doc-content p {
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .doc-content ul, .doc-content ol {
+            margin: 1rem 0 1.5rem 1.5rem;
+            color: var(--text-light);
+        }
+
+        .doc-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .doc-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .doc-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .main-content {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-box {
+                display: none;
+            }
+
+            .content-title {
+                font-size: 2rem;
+            }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="index.html" class="logo">
+            <img src="assets/zyantik-logo.png" alt="Zyantik Logo">
+            <span class="logo-text">📚 Knowledge Centre</span>
+        </a>
+        <div class="top-nav-right">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" placeholder="Search documentation...">
+            </div>
+            <a href="index.html">← Back to Main Site</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-links">
+                    <li><a href="#overview" class="active">Overview</a></li>
+                    <li><a href="#quick-start">Quick Start Guide</a></li>
+                    <li><a href="#key-features">Key Features</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Architecture</div>
+                <ul class="sidebar-links">
+                    <li><a href="#arch-overview">Architecture Overview</a></li>
+                    <li><a href="#init-pattern">Initialization Manager</a></li>
+                    <li><a href="#file-structure">File Structure</a></li>
+                    <li><a href="#data-flow">Data Flow</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Developer Guide</div>
+                <ul class="sidebar-links">
+                    <li><a href="#development">Development Guidelines</a></li>
+                    <li><a href="#adding-modules">Adding New Modules</a></li>
+                    <li><a href="#common-patterns">Common Patterns</a></li>
+                    <li><a href="#troubleshooting">Troubleshooting</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Features</div>
+                <ul class="sidebar-links">
+                    <li><a href="#currency">Currency Management</a></li>
+                    <li><a href="#resources">Resource Planning</a></li>
+                    <li><a href="#timeline">Timeline Calculation</a></li>
+                    <li><a href="#data-persistence">Data Persistence</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">API Reference</div>
+                <ul class="sidebar-links">
+                    <li><a href="#api-core">Core Functions</a></li>
+                    <li><a href="#api-modules">Module APIs</a></li>
+                    <li><a href="#api-data">Data Structures</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div class="breadcrumb">
+                    <a href="index.html">Home</a> / <span>Knowledge Centre</span>
+                </div>
+                <h1 class="content-title">Welcome to the Knowledge Centre</h1>
+                <p class="content-description">
+                    Comprehensive documentation, guides, and best practices for the Zyantik Project Estimating Tool. 
+                    Whether you're just getting started or diving deep into the architecture, you'll find everything you need here.
+                </p>
+            </div>
+
+            <section id="overview">
+                <h2 style="font-size: 1.8rem; margin-bottom: 2rem;">Browse by Topic</h2>
+                <div class="articles-grid">
+                    <div class="article-card">
+                        <div class="article-icon">🚀</div>
+                        <h3>Getting Started</h3>
+                        <p>Learn the basics and get up and running with the Project Estimating Tool in minutes.</p>
+                        <div class="article-meta">
+                            <span>5 articles</span>
+                            <span>•</span>
+                            <span>Beginner</span>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-icon">🏗️</div>
+                        <h3>Architecture Guide</h3>
+                        <p>Deep dive into the Initialization Manager pattern and modular architecture design.</p>
+                        <div class="article-meta">
+                            <span>8 articles</span>
+                            <span>•</span>
+                            <span>Advanced</span>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-icon">💻</div>
+                        <h3>Developer Guide</h3>
+                        <p>Best practices, common patterns, and step-by-step guides for extending the tool.</p>
+                        <div class="article-meta">
+                            <span>12 articles</span>
+                            <span>•</span>
+                            <span>Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-icon">🌍</div>
+                        <h3>Currency Management <span class="badge badge-new">New</span></h3>
+                        <p>Comprehensive guide to multi-currency support and exchange rate management.</p>
+                        <div class="article-meta">
+                            <span>4 articles</span>
+                            <span>•</span>
+                            <span>All Levels</span>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-icon">🔧</div>
+                        <h3>Troubleshooting</h3>
+                        <p>Common issues, error messages, and solutions to get you back on track quickly.</p>
+                        <div class="article-meta">
+                            <span>15 articles</span>
+                            <span>•</span>
+                            <span>All Levels</span>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-icon">📊</div>
+                        <h3>API Reference</h3>
+                        <p>Complete API documentation for all modules, functions, and data structures.</p>
+                        <div class="article-meta">
+                            <span>20+ references</span>
+                            <span>•</span>
+                            <span>Reference</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="quick-start" class="doc-content" style="margin-top: 4rem;">
+                <h2>Quick Start Guide</h2>
+                
+                <p>Get started with the Project Estimating Tool in just a few steps. This guide will walk you through the basics of creating your first project estimate.</p>
+
+                <h3>What You'll Need</h3>
+                <ul>
+                    <li>A modern web browser (Chrome, Firefox, Safari, or Edge)</li>
+                    <li>Basic understanding of project management concepts</li>
+                    <li>Your project requirements and resource information</li>
+                </ul>
+
+                <div class="callout callout-info">
+                    <strong>📘 Note</strong>
+                    The tool runs entirely in your browser using localStorage for data persistence. No backend server or database is required.
+                </div>
+
+                <h3>Step 1: Project Information</h3>
+                <p>Start by entering your basic project information:</p>
+                <ul>
+                    <li>Project name and description</li>
+                    <li>Start and end dates</li>
+                    <li>Primary currency for the project</li>
+                </ul>
+
+                <h3>Step 2: Add Resources</h3>
+                <p>Define your project resources across multiple categories:</p>
+                <ul>
+                    <li><strong>Internal Resources:</strong> Your in-house team members with their rates and allocation</li>
+                    <li><strong>External Resources:</strong> Contractors and consultants</li>
+                    <li><strong>Vendors:</strong> Third-party service providers</li>
+                    <li><strong>Tools & Software:</strong> Licensing and subscription costs</li>
+                    <li><strong>Miscellaneous:</strong> Other project expenses</li>
+                </ul>
+
+                <h3>Step 3: Configure Timeline</h3>
+                <p>The tool automatically calculates month-based allocations based on your project dates. You can adjust resource allocations for specific months as needed.</p>
+
+                <h3>Step 4: Review & Export</h3>
+                <p>View your comprehensive project summary and export the data for stakeholder review and approval.</p>
+
+                <div class="callout callout-success">
+                    <strong>✓ Pro Tip</strong>
+                    Your data is automatically saved as you work. You can safely close your browser and return later to continue editing your estimate.
+                </div>
+            </section>
+
+            <section id="key-features" class="doc-content" style="margin-top: 4rem;">
+                <h2>Key Features</h2>
+
+                <h3>Multi-Category Cost Tracking</h3>
+                <p>The tool provides comprehensive cost tracking across five main categories, allowing you to capture all aspects of your project budget:</p>
+                <ul>
+                    <li>Internal resources with customizable rate cards</li>
+                    <li>External contractors and consultants</li>
+                    <li>Vendor services and contracts</li>
+                    <li>Tools, software, and equipment</li>
+                    <li>Miscellaneous expenses</li>
+                </ul>
+
+                <h3>Dynamic Timeline Calculations</h3>
+                <p>Month-based timeline calculations automatically adjust resource allocations across your project duration. The system calculates:</p>
+                <ul>
+                    <li>Total project months from start to end date</li>
+                    <li>Automatic prorating for partial months</li>
+                    <li>Resource costs distributed across timeline</li>
+                    <li>Monthly burn rate tracking</li>
+                </ul>
+
+                <h3>Currency Management <span class="badge badge-new">v2.1</span></h3>
+                <p>Comprehensive multi-currency support for international projects:</p>
+                <ul>
+                    <li>33 global currencies supported</li>
+                    <li>Manual exchange rate management</li>
+                    <li>Currency conversion utilities</li>
+                    <li>Primary currency selection</li>
+                </ul>
+
+                <h3>Data Persistence</h3>
+                <p>Built-in localStorage integration ensures your work is never lost:</p>
+                <ul>
+                    <li>Automatic saving as you work</li>
+                    <li>No backend required</li>
+                    <li>Works offline</li>
+                    <li>Export capabilities for backup</li>
+                </ul>
+
+                <h3>Risk Assessment & Contingency</h3>
+                <p>Built-in tools for identifying and planning for project uncertainties:</p>
+                <ul>
+                    <li>Risk factor identification</li>
+                    <li>Contingency budget allocation</li>
+                    <li>Buffer planning</li>
+                    <li>Scenario modeling</li>
+                </ul>
+            </section>
+
+            <section id="arch-overview" class="doc-content" style="margin-top: 4rem;">
+                <h2>Architecture Overview</h2>
+
+                <p>The Project Estimating Tool is built using a modular architecture with a centralized initialization management system. This design ensures predictable behavior, maintainability, and extensibility.</p>
+
+                <h3>Core Architectural Principles</h3>
+
+                <div class="callout callout-info">
+                    <strong>🎯 Design Philosophy</strong>
+                    The architecture follows the Initialization Manager pattern, which provides centralized control over module loading, dependency management, and startup sequencing.
+                </div>
+
+                <h4>1. Centralized Initialization</h4>
+                <p>All application initialization is controlled by a single <code>init_manager.js</code> module. This provides:</p>
+                <ul>
+                    <li>Predictable module load order</li>
+                    <li>Dependency checking before execution</li>
+                    <li>Graceful error handling</li>
+                    <li>Clear debugging and logging</li>
+                </ul>
+
+                <h4>2. Modular Architecture</h4>
+                <p>The application is broken down into focused, single-responsibility modules:</p>
+                <ul>
+                    <li><strong>DOM Manager:</strong> Handles all DOM manipulation</li>
+                    <li><strong>Table Renderer:</strong> Manages table display and updates</li>
+                    <li><strong>Data Manager:</strong> Controls data persistence and loading</li>
+                    <li><strong>Edit Manager:</strong> Handles inline editing functionality</li>
+                    <li><strong>Currency Manager:</strong> Manages multi-currency operations</li>
+                </ul>
+
+                <h4>3. Global Window Pattern</h4>
+                <p>All modules and critical functions are exported to the window object, ensuring cross-module communication and preventing scope issues:</p>
+
+                <pre><code>// Module exports
+window.dataManager = new DataManager();
+window.updateSummary = updateSummary;
+window.projectData = {...};</code></pre>
+
+                <h4>4. Event-Driven Updates</h4>
+                <p>The application uses event listeners strategically placed during initialization, avoiding scattered event setup across multiple files.</p>
+            </section>
+
+            <section id="init-pattern" class="doc-content" style="margin-top: 4rem;">
+                <h2>Initialization Manager Pattern</h2>
+
+                <p>The Initialization Manager is the heart of the application's startup sequence. Understanding this pattern is crucial for development and troubleshooting.</p>
+
+                <h3>Why Use This Pattern?</h3>
+
+                <div class="callout callout-danger">
+                    <strong>❌ Anti-Pattern: Multiple DOMContentLoaded Listeners</strong>
+                    Never scatter DOMContentLoaded listeners across multiple files. This creates unpredictable execution order, race conditions, and debugging nightmares.
+                </div>
+
+                <div class="callout callout-success">
+                    <strong>✓ Best Practice: Single Initialization Point</strong>
+                    Use one centralized initialization manager that orchestrates all module loading and startup sequencing.
+                </div>
+
+                <h3>Initialization Sequence</h3>
+                <p>The manager follows a strict 12-step initialization sequence:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Step</th>
+                            <th>Action</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Initialize project data</td>
+                            <td>Create base data structure with defaults</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Check available modules</td>
+                            <td>Detect which modules loaded successfully</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Initialize DOM Manager</td>
+                            <td>Set up DOM manipulation utilities</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Setup event listeners</td>
+                            <td>Configure tabs, buttons, and forms</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Wait for critical functions</td>
+                            <td>Ensure updateSummary and updateMonthHeaders exist</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Initialize save button</td>
+                            <td>Enable project info persistence</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>Load saved data</td>
+                            <td>Restore from localStorage if available</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>Render tables</td>
+                            <td>Display all cost category tables</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>Update UI</td>
+                            <td>Refresh summary and timeline displays</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>Initialize welcome feature</td>
+                            <td>Show new project popup if needed</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td>Initialize Currency Manager</td>
+                            <td>Setup multi-currency support</td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td>Final re-render</td>
+                            <td>Ensure all UI elements are in sync</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Code Structure</h3>
+                <pre><code>class InitializationManager {
+    constructor() {
+        this.initialized = false;
+        this.modules = {
+            dataManager: false,
+            tableRenderer: false,
+            editManager: false,
+            currencyManager: false
+            // ... other modules
+        };
+    }
+
+    async initialize() {
+        // Execute all 12 initialization steps
+        // With comprehensive logging and error handling
+    }
+}</code></pre>
+
+                <div class="callout callout-warning">
+                    <strong>⚠️ Important</strong>
+                    The initialization manager should ALWAYS be loaded last in your HTML. All other modules must load before it can orchestrate the startup sequence.
+                </div>
+            </section>
+
+            <section id="file-structure" class="doc-content" style="margin-top: 4rem;">
+                <h2>File Structure</h2>
+
+                <p>Understanding the project's file organization is essential for navigation and development.</p>
+
+                <pre><code>cost_estimation/
+├── index.html                # Main application entry point
+├── script.js                 # Core business logic
+├── style.css                 # Main stylesheet
+├── js/
+│   ├── dom_manager.js       # DOM utilities
+│   ├── table_renderer.js    # Table rendering
+│   └── data_manager.js      # Data persistence
+├── modules/
+│   ├── init_manager.js      # ⭐ Load LAST
+│   ├── editManager.js       # Inline editing
+│   ├── dynamic_form_helper.js
+│   ├── table_fixes.js
+│   ├── new_project_welcome.js
+│   └── currency_manager.js  # ⭐ NEW in v2.1
+└── Styles/
+    └── edit-styles.css      # Edit-specific styles</code></pre>
+
+                <h3>File Responsibilities</h3>
+
+                <h4>init_manager.js ⭐ START HERE</h4>
+                <ul>
+                    <li>Central initialization orchestrator</li>
+                    <li>ONLY file that runs initialization logic</li>
+                    <li>Must be loaded last in HTML</li>
+                    <li>Exports: <code>window.initManager</code></li>
+                </ul>
+
+                <h4>script.js</h4>
+                <ul>
+                    <li>Core application functions</li>
+                    <li>NO DOMContentLoaded listener</li>
+                    <li>Only function definitions</li>
+                    <li>Must export all functions to window</li>
+                </ul>
+
+                <h4>currency_manager.js ⭐ NEW</h4>
+                <ul>
+                    <li>Multi-currency support</li>
+                    <li>Exchange rate management</li>
+                    <li>Currency conversion utilities</li>
+                    <li>Exports: <code>window.currencyManager</code></li>
+                </ul>
+
+                <div class="callout callout-info">
+                    <strong>📚 Module Pattern</strong>
+                    Every module follows the same pattern: define a class, export to window, but don't initialize automatically. The init_manager handles all initialization.
+                </div>
+            </section>
+
+            <section id="development" class="doc-content" style="margin-top: 4rem;">
+                <h2>Development Guidelines</h2>
+
+                <p>Follow these guidelines to maintain code quality and architectural consistency when extending the tool.</p>
+
+                <h3>DO ✅</h3>
+                <ul>
+                    <li>Use init_manager for all initialization</li>
+                    <li>Export critical functions to window</li>
+                    <li>Check dependencies before using them</li>
+                    <li>Log initialization steps with ✓ checkmarks</li>
+                    <li>Provide fallback implementations</li>
+                    <li>Use consistent naming conventions</li>
+                    <li>Comment your code thoroughly</li>
+                    <li>Test modules in isolation</li>
+                    <li>Add commas in object literals</li>
+                </ul>
+
+                <h3>DON'T ❌</h3>
+                <ul>
+                    <li>Add DOMContentLoaded in multiple files</li>
+                    <li>Initialize on file load</li>
+                    <li>Assume modules are loaded</li>
+                    <li>Use setTimeout for initialization</li>
+                    <li>Hardcode dependencies</li>
+                    <li>Mix global and local scope</li>
+                    <li>Duplicate functions</li>
+                    <li>Skip error handling</li>
+                    <li>Forget commas (causes syntax errors!)</li>
+                </ul>
+
+                <div class="callout callout-warning">
+                    <strong>⚠️ Common Mistake</strong>
+                    Forgetting to add a comma before a new property in the modules object is the #1 cause of "Unexpected identifier" syntax errors.
+                </div>
+            </section>
+
+            <section id="adding-modules" class="doc-content" style="margin-top: 4rem;">
+                <h2>Adding New Modules</h2>
+
+                <p>Follow this step-by-step guide to add a new module to the application.</p>
+
+                <h3>Step 1: Create the Module File</h3>
+                <pre><code>// modules/my_new_module.js
+class MyNewModule {
+    constructor() {
+        console.log('MyNewModule initialized');
+    }
+
+    initialize() {
+        // Setup code here
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        // Add listeners
+    }
+
+    myMethod() {
+        // Module functionality
+    }
+}
+
+window.myNewModule = new MyNewModule();
+console.log('MyNewModule loaded');</code></pre>
+
+                <h3>Step 2: Add Script Tag to HTML</h3>
+                <p>Add the script tag BEFORE init_manager.js:</p>
+                <pre><code>&lt;!-- Other modules --&gt;
+&lt;script src="modules/new_project_welcome.js"&gt;&lt;/script&gt;
+&lt;script src="modules/my_new_module.js"&gt;&lt;/script&gt;
+
+&lt;!-- Init manager loads LAST --&gt;
+&lt;script src="modules/init_manager.js"&gt;&lt;/script&gt;</code></pre>
+
+                <h3>Step 3: Register in init_manager.js</h3>
+                <div class="callout callout-danger">
+                    <strong>⚠️ CRITICAL: Don't forget the comma!</strong>
+                    This is the most common error when adding modules.
+                </div>
+
+                <pre><code>// In constructor
+this.modules = {
+    // ... existing modules
+    newProjectWelcome: false,  // ← MUST have comma
+    myNewModule: false         // ← No comma if last
+};
+
+// In checkModules()
+this.modules.myNewModule = !!(
+    window.myNewModule || window.MyNewModule
+);
+
+// In initialize() - if initialization needed
+if (this.modules.myNewModule && 
+    typeof window.myNewModule.initialize === 'function') {
+    window.myNewModule.initialize();
+    console.log('✓ MyNewModule initialized');
+}</code></pre>
+
+                <h3>Step 4: Test the Module</h3>
+                <ol>
+                    <li>Open browser console</li>
+                    <li>Look for "MyNewModule loaded" message</li>
+                    <li>Check initialization logs</li>
+                    <li>Test module functionality</li>
+                    <li>Verify no errors in console</li>
+                </ol>
+
+                <div class="callout callout-success">
+                    <strong>✓ Module Checklist</strong>
+                    Use the complete module checklist in the troubleshooting section to ensure you haven't missed any steps.
+                </div>
+            </section>
+
+            <section id="currency" class="doc-content" style="margin-top: 4rem;">
+                <h2>Currency Management <span class="badge badge-new">v2.1</span></h2>
+
+                <p>The Currency Manager provides comprehensive multi-currency support for international projects.</p>
+
+                <h3>Supported Currencies</h3>
+                <p>The tool supports 33 global currencies, including:</p>
+                <ul>
+                    <li><strong>Top 10:</strong> USD, EUR, GBP, JPY, CNY, AUD, CAD, CHF, INR, SGD</li>
+                    <li><strong>Additional 23:</strong> AED, ARS, BRL, CZK, DKK, HKD, HUF, IDR, ILS, KRW, MXN, MYR, NOK, NZD, PHP, PLN, RON, RUB, SEK, THB, TRY, TWD, ZAR</li>
+                </ul>
+
+                <h3>Setting Primary Currency</h3>
+                <pre><code>// Access current currency
+const primaryCurrency = window.projectData.currency.primaryCurrency;
+
+// Change currency programmatically
+window.projectData.currency.primaryCurrency = 'EUR';
+window.currencyManager.updateCurrencyDisplay();</code></pre>
+
+                <h3>Managing Exchange Rates</h3>
+                <pre><code>// Add exchange rate (1 USD = 0.85 EUR)
+window.currencyManager.addExchangeRate('EUR', 0.85);
+
+// Delete exchange rate
+window.currencyManager.deleteExchangeRate(rateId);
+
+// Get all rates
+const rates = window.projectData.currency.exchangeRates;</code></pre>
+
+                <h3>Currency Conversion</h3>
+                <pre><code>// Convert 100 USD to EUR
+const converted = window.currencyManager.convertCurrency(
+    100, 
+    'USD', 
+    'EUR'
+);
+
+// Get currency symbol
+const symbol = window.currencyManager.getCurrencySymbol('USD'); // '$'
+
+// Get currency name
+const name = window.currencyManager.getCurrencyName('USD'); // 'US Dollar'</code></pre>
+
+                <h3>Data Structure</h3>
+                <pre><code>{
+    currency: {
+        primaryCurrency: 'USD',
+        exchangeRates: [
+            {
+                id: 1234567890,
+                currency: 'EUR',
+                rate: 0.85,
+                lastUpdated: '2024-10-10T12:00:00Z'
+            }
+        ]
+    }
+}</code></pre>
+
+                <div class="callout callout-info">
+                    <strong>🔮 Future Enhancement</strong>
+                    Planned features include automatic rate fetching from APIs, multi-currency cost entry, conversion history, and real-time rate updates.
+                </div>
+            </section>
+
+            <section id="troubleshooting" class="doc-content" style="margin-top: 4rem;">
+                <h2>Troubleshooting</h2>
+
+                <p>Common issues and their solutions to get you back on track quickly.</p>
+
+                <h3>Timeout waiting for function: updateSummary</h3>
+                <p><strong>Cause:</strong> The function isn't exported to window</p>
+                <p><strong>Fix:</strong> In script.js, ensure:</p>
+                <pre><code>window.updateSummary = updateSummary;</code></pre>
+
+                <h3>Tabs/buttons not working</h3>
+                <p><strong>Cause:</strong> Event listeners not being set up</p>
+                <p><strong>Fix:</strong> Ensure <code>initializeBasicFunctionality()</code> is:</p>
+                <ol>
+                    <li>Defined in script.js</li>
+                    <li>Exported to window</li>
+                    <li>Called by init_manager.js</li>
+                </ol>
+
+                <h3>Uncaught SyntaxError: Unexpected identifier</h3>
+                <p><strong>Cause:</strong> Missing comma before new module in modules object</p>
+                <p><strong>Fix:</strong> In init_manager.js:</p>
+                <pre><code>this.modules = {
+    newProjectWelcome: false,  // ← MUST have comma
+    currencyManager: false     // ← Last item, no comma
+};</code></pre>
+
+                <h3>Module not loading</h3>
+                <p><strong>Checklist:</strong></p>
+                <ul>
+                    <li>✅ Script tag in index.html? (before init_manager.js)</li>
+                    <li>✅ Module exports to window?</li>
+                    <li>✅ Module registered in init_manager.js?</li>
+                    <li>✅ Comma added after previous module?</li>
+                    <li>✅ Check browser console for errors</li>
+                </ul>
+
+                <h3>Currency settings not saving</h3>
+                <p><strong>Cause:</strong> Currency data structure not initialized</p>
+                <p><strong>Fix:</strong></p>
+                <ol>
+                    <li>Check browser console for errors</li>
+                    <li>Verify <code>window.projectData.currency</code> exists</li>
+                    <li>Try: <code>localStorage.clear()</code></li>
+                    <li>Check if DataManager is properly saving</li>
+                </ol>
+
+                <div class="callout callout-info">
+                    <strong>💡 Debugging Tip</strong>
+                    Always check the browser console first. The init_manager provides comprehensive logging of every step with ✓ checkmarks for successful operations.
+                </div>
+            </section>
+
+            <div class="doc-footer">
+                <div>
+                    <strong>Last Updated:</strong> October 2025 • Version 2.1
+                </div>
+                <div>
+                    <a href="#top">Back to Top ↑</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
