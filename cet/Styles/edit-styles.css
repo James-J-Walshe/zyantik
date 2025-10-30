@@ -1,0 +1,500 @@
+/* Edit Styles CSS - Enhanced for dynamic month editing and improved UI */
+
+/* Basic Edit Button Styles */
+.edit-btn {
+    background-color: #17a2b8;
+    border: none;
+    color: white;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 4px;
+}
+
+.edit-btn:hover {
+    background-color: #138496;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);
+}
+
+.edit-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Action Button Styles */
+.action-buttons {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.icon-btn {
+    border: none;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+}
+
+.icon-btn.success {
+    background-color: #28a745;
+    color: white;
+}
+
+.icon-btn.success:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.icon-btn.secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.icon-btn.secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.save-edit-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.cancel-edit-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Editing State Styles */
+.editing {
+    background-color: #fff3cd !important;
+    border: 2px solid #ffc107;
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+}
+
+.editing .edit-input {
+    width: 100%;
+    padding: 4px 6px;
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+    font-size: 13px;
+    background-color: white;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.editing .edit-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.editing .edit-input.month-input {
+    background-color: #f8f9fa;
+    border-color: #007bff;
+    font-weight: 500;
+    text-align: center;
+}
+
+.editing .edit-input.month-input:focus {
+    background-color: white;
+    border-color: #0056b3;
+}
+
+/* Table Cell Editing Enhancements */
+.data-table td.editing-cell {
+    padding: 2px;
+    vertical-align: middle;
+}
+
+.data-table .editing td {
+    padding: 4px;
+    background-color: rgba(255, 243, 205, 0.5);
+}
+
+/* Select Dropdown Styling for Inline Editing */
+.editing select.edit-input {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 4px center;
+    background-repeat: no-repeat;
+    background-size: 12px 8px;
+    padding-right: 20px;
+    appearance: none;
+}
+
+/* Textarea Styling for Inline Editing */
+.editing textarea.edit-input {
+    resize: vertical;
+    min-height: 40px;
+    line-height: 1.2;
+    font-family: inherit;
+}
+
+/* Dynamic Month Input Enhancements */
+.month-input {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #007bff;
+    color: #495057;
+    font-weight: 600;
+    text-align: center;
+}
+
+.month-input:focus {
+    background: white;
+    border-color: #0056b3;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.month-input:hover:not(:focus) {
+    border-color: #0056b3;
+    background: #e3f2fd;
+}
+
+/* Responsive Month Inputs */
+@media (max-width: 768px) {
+    .month-input {
+        font-size: 12px;
+        padding: 2px 4px;
+        min-width: 60px;
+    }
+    
+    .editing .edit-input {
+        font-size: 12px;
+        padding: 2px 4px;
+    }
+    
+    .icon-btn {
+        min-width: 28px;
+        height: 28px;
+        padding: 4px 6px;
+    }
+    
+    .icon-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+    
+    .action-buttons {
+        gap: 2px;
+    }
+}
+
+/* Validation States */
+.edit-input:invalid {
+    border-color: #dc3545;
+    background-color: #fff5f5;
+}
+
+.edit-input:valid {
+    border-color: #28a745;
+}
+
+.edit-input:invalid:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+}
+
+/* Loading States */
+.editing.saving {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.editing.saving::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* Enhanced Focus Management */
+.editing .edit-input:focus {
+    z-index: 10;
+    position: relative;
+}
+
+/* Better Visual Feedback */
+.editing td {
+    position: relative;
+    transition: background-color 0.2s ease;
+}
+
+.editing td:hover {
+    background-color: rgba(255, 243, 205, 0.8);
+}
+
+/* Month Column Headers Enhancement */
+.data-table thead th.month-header {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+/* Two-row Header Styling */
+.year-header-row th {
+    background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+    color: white;
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 0.9rem;
+}
+
+.month-header-row th {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 8px 4px;
+}
+
+/* Enhanced Action Column */
+.data-table th:last-child,
+.data-table td:last-child {
+    text-align: center;
+    white-space: nowrap;
+    width: 120px;
+    min-width: 120px;
+}
+
+/* Improved Accessibility */
+.edit-btn:focus,
+.icon-btn:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+.edit-input:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: 1px;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .editing {
+        background-color: #2d3748 !important;
+        border-color: #ffc107;
+    }
+    
+    .editing .edit-input {
+        background-color: #4a5568;
+        border-color: #718096;
+        color: #e2e8f0;
+    }
+    
+    .editing .edit-input:focus {
+        background-color: #2d3748;
+        border-color: #4299e1;
+        color: #e2e8f0;
+    }
+    
+    .month-input {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        border-color: #4299e1;
+        color: #e2e8f0;
+    }
+    
+    .month-input:focus {
+        background: #2d3748;
+        border-color: #3182ce;
+    }
+}
+
+/* Enhanced Table Integration */
+.data-table .editing {
+    box-shadow: inset 0 0 0 2px #ffc107;
+}
+
+.data-table tbody tr.editing:hover {
+    background-color: #fff3cd !important;
+}
+
+/* Smooth Transitions */
+.data-table td,
+.action-buttons,
+.icon-btn,
+.edit-input {
+    transition: all 0.2s ease;
+}
+
+/* Error States */
+.editing.error {
+    border-color: #dc3545;
+    background-color: #fff5f5 !important;
+}
+
+.editing.error .edit-input {
+    border-color: #dc3545;
+}
+
+/* Success States */
+.editing.success {
+    border-color: #28a745;
+    background-color: #f8fff9 !important;
+}
+
+.editing.success .edit-input {
+    border-color: #28a745;
+}
+
+/* Animation for Edit Mode Entry */
+@keyframes editModeEntry {
+    0% {
+        background-color: transparent;
+        transform: scale(1);
+    }
+    50% {
+        background-color: #fff3cd;
+        transform: scale(1.02);
+    }
+    100% {
+        background-color: #fff3cd;
+        transform: scale(1);
+    }
+}
+
+.editing {
+    animation: editModeEntry 0.3s ease;
+}
+
+/* Compact Mode for Smaller Screens */
+@media (max-width: 1200px) {
+    .data-table th,
+    .data-table td {
+        padding: 6px 4px;
+        font-size: 0.85rem;
+    }
+    
+    .month-header-row th {
+        font-size: 0.75rem;
+        padding: 6px 2px;
+    }
+    
+    .year-header-row th {
+        font-size: 0.8rem;
+        padding: 6px 4px;
+    }
+}
+
+/* Ultra-compact for mobile */
+@media (max-width: 600px) {
+    .data-table {
+        font-size: 0.75rem;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 4px 2px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 1px;
+    }
+    
+    .icon-btn {
+        min-width: 24px;
+        height: 24px;
+        padding: 2px 4px;
+    }
+    
+    .icon-btn svg {
+        width: 12px;
+        height: 12px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .edit-btn,
+    .save-edit-btn,
+    .cancel-edit-btn,
+    .delete-btn,
+    .action-buttons {
+        display: none !important;
+    }
+    
+    .editing {
+        background-color: transparent !important;
+        border: none !important;
+    }
+    
+    .edit-input {
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .edit-btn,
+    .icon-btn,
+    .edit-input,
+    .editing {
+        transition: none;
+        animation: none;
+    }
+    
+    .edit-btn:hover,
+    .icon-btn:hover {
+        transform: none;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .editing {
+        border-width: 3px;
+        border-color: #000;
+    }
+    
+    .edit-input {
+        border-width: 2px;
+        border-color: #000;
+    }
+    
+    .edit-btn,
+    .icon-btn {
+        border: 2px solid #000;
+    }
+}
