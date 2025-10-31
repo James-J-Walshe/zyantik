@@ -3,397 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zyantik Project Estimating Tool - ICT Project Cost Estimation</title>
+    <title>Zyantik - ICT Project Cost Estimation Made Simple</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Page-specific styles for landing page */
-        .hero {
-            margin-top: 80px;
-            padding: 6rem 5% 4rem;
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-            min-height: 85vh;
-            display: flex;
-            align-items: center;
-        }
-
-        .hero-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .hero-text h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-text h1 span {
-            color: var(--primary-color);
-        }
-
-        .hero-text p {
-            font-size: 1.3rem;
-            color: var(--text-light);
-            margin-bottom: 2.5rem;
-            line-height: 1.6;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .hero-visual {
-            position: relative;
-            padding: 2rem;
-        }
-
-        .tool-mockup {
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-            color: white;
-        }
-
-        .mockup-header {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .mockup-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .mockup-content {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-
-        .mockup-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.8rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .mockup-row:last-child {
-            border-bottom: none;
-        }
-
-        .features {
-            padding: 6rem 5%;
-            background: var(--bg-primary);
-        }
-
-        .features-container, .use-cases-container, .architecture-container, .cta-content {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 3rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card p {
-            color: var(--text-light);
-            line-height: 1.7;
-        }
-
-        .use-cases {
-            padding: 6rem 5%;
-            background: var(--bg-secondary);
-        }
-
-        .use-cases-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .use-case-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-color);
-            transition: all var(--transition-normal);
-        }
-
-        .use-case-card:hover {
-            border-color: var(--primary-color);
-            box-shadow: 0 8px 30px rgba(0, 102, 204, 0.1);
-        }
-
-        .use-case-card h3 {
-            font-size: 1.6rem;
-            margin-bottom: 1rem;
-        }
-
-        .use-case-card ul {
-            list-style: none;
-            margin: 1.5rem 0;
-        }
-
-        .use-case-card li {
-            padding: 0.5rem 0;
-            color: var(--text-light);
-            padding-left: 1.5rem;
-            position: relative;
-        }
-
-        .use-case-card li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        .architecture {
-            padding: 6rem 5%;
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
-            color: white;
-        }
-
-        .architecture h2 {
-            font-size: 2.8rem;
-            margin-bottom: 2rem;
-            color: white;
-            text-align: center;
-        }
-
-        .architecture p {
-            font-size: 1.3rem;
-            margin-bottom: 3rem;
-            opacity: 0.95;
-            text-align: center;
-        }
-
-        .architecture-features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .arch-feature {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .arch-feature h4 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: white;
-        }
-
-        .arch-feature p {
-            font-size: 1rem;
-            margin: 0;
-        }
-
-        .cta-section {
-            padding: 6rem 5%;
-            background: var(--bg-secondary);
-            text-align: center;
-        }
-
-        .cta-content h2 {
-            font-size: 2.8rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .cta-content p {
-            font-size: 1.3rem;
-            color: var(--text-light);
-            margin-bottom: 2.5rem;
-        }
-
-        @media (max-width: 1024px) {
-            .hero-content {
-                grid-template-columns: 1fr;
-            }
-
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .use-cases-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .architecture-features {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero-text h1 {
-                font-size: 2.5rem;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
 <body>
-    <nav>
-        <a href="index.html" class="logo">
-            <img src="assets/zyantik-logo.png" alt="Zyantik Logo">
-            <span class="logo-text">Zyantik</span>
-        </a>
-        <ul class="nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#use-cases">Use Cases</a></li>
-            <li><a href="#architecture">Architecture</a></li>
-            <li><a href="knowledge-centre.html">Knowledge Centre</a></li>
-        </ul>
-        <a href="#demo" class="btn-primary">Request Demo</a>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/zyantik-logo.png" alt="Zyantik Logo">
+                <span class="logo-text">Zyantik</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#solutions">Solutions</a></li>
+                <li><a href="#benefits">Benefits</a></li>
+                <li><a href="knowledge-centre.html">Resources</a></li>
+            </ul>
+            <div class="nav-cta">
+                <a href="#demo" class="btn btn-primary">Request Demo</a>
+            </div>
+        </div>
     </nav>
 
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-text">
-                <h1>Accurate <span>ICT project estimation</span> made simple</h1>
-                <p>Transform complex project planning with our comprehensive estimation tool. Calculate costs, manage resources, track timelines, and plan budgets with confidence.</p>
-                <div class="hero-buttons">
-                    <a href="/cet/" class="btn-primary">Get Started</a>
-                    <a href="knowledge-centre.html" class="btn-secondary">View Documentation</a>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Accurate ICT Project Estimation Made Simple</h1>
+                    <p class="hero-description">Transform complex project planning with our comprehensive estimation tool. Calculate costs, manage resources, track timelines, and plan budgets with confidence.</p>
+                    <div class="hero-buttons">
+                        <a href="/cet/" class="btn btn-primary btn-lg">Get Started</a>
+                        <a href="knowledge-centre.html" class="btn btn-outline btn-lg">View Documentation</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">98%</div>
+                            <div class="stat-label">Accuracy Rate</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">33</div>
+                            <div class="stat-label">Currencies Supported</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Data Persistence</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="hero-visual">
-                <div class="tool-mockup">
-                    <div class="mockup-header">
-                        <div class="mockup-dot"></div>
-                        <div class="mockup-dot"></div>
-                        <div class="mockup-dot"></div>
-                    </div>
-                    <div class="mockup-content">
-                        <div class="mockup-row">
-                            <span>Internal Resources</span>
-                            <strong>$245,000</strong>
-                        </div>
-                        <div class="mockup-row">
-                            <span>External Resources</span>
-                            <strong>$180,000</strong>
-                        </div>
-                        <div class="mockup-row">
-                            <span>Vendors & Tools</span>
-                            <strong>$95,000</strong>
-                        </div>
-                        <div class="mockup-row">
-                            <span style="font-weight: 600;">Total Estimate</span>
-                            <strong style="font-size: 1.3rem;">$520,000</strong>
-                        </div>
-                    </div>
+                <div class="hero-image">
+                    <img src="assets/hero-illustration.png" alt="Team collaborating on project estimation">
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="features" id="features">
-        <div class="features-container">
+    <!-- Features Overview -->
+    <section class="features-overview" id="features">
+        <div class="content-container">
             <div class="section-header">
-                <h2>Everything you need for accurate estimation</h2>
-                <p>Comprehensive tools designed for ICT project managers and financial planners</p>
+                <span class="section-label">Comprehensive Tools</span>
+                <h2>Everything You Need for Accurate Estimation</h2>
+                <p class="section-description">Designed specifically for ICT project managers and financial planners who demand precision and reliability</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">💰</div>
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="40" height="40" rx="8" fill="#0066cc" opacity="0.1"/>
+                            <path d="M20 12V28M12 20H28" stroke="#0066cc" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
                     <h3>Multi-Category Costing</h3>
-                    <p>Track internal resources, external contractors, vendors, tools, and miscellaneous costs all in one place.</p>
+                    <p>Track internal resources, external contractors, vendors, tools, and miscellaneous costs all in one unified platform.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">📅</div>
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="40" height="40" rx="8" fill="#0066cc" opacity="0.1"/>
+                            <path d="M12 16L20 12L28 16V24L20 28L12 24V16Z" stroke="#0066cc" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
                     <h3>Timeline Planning</h3>
-                    <p>Dynamic month-based calculations automatically adjust resource allocations across your project timeline.</p>
+                    <p>Dynamic month-based calculations that automatically adjust resource allocations across your entire project timeline.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🌍</div>
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="40" height="40" rx="8" fill="#0066cc" opacity="0.1"/>
+                            <circle cx="20" cy="20" r="8" stroke="#0066cc" stroke-width="2"/>
+                        </svg>
+                    </div>
                     <h3>Currency Management</h3>
-                    <p>Support for 33 global currencies with built-in exchange rate management for international projects.</p>
+                    <p>Support for 33 global currencies with built-in exchange rate management for seamless international projects.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">⚠️</div>
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="40" height="40" rx="8" fill="#0066cc" opacity="0.1"/>
+                            <path d="M20 12L24 16H16L20 12Z" stroke="#0066cc" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
                     <h3>Risk Assessment</h3>
-                    <p>Built-in contingency planning tools help you account for uncertainties and mitigate project risks.</p>
+                    <p>Built-in contingency planning tools to help you account for uncertainties and effectively mitigate project risks.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">💾</div>
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="40" height="40" rx="8" fill="#0066cc" opacity="0.1"/>
+                            <rect x="14" y="14" width="12" height="12" stroke="#0066cc" stroke-width="2"/>
+                        </svg>
+                    </div>
                     <h3>Data Persistence</h3>
-                    <p>Automatic saving with localStorage ensures your estimates are never lost, even without a backend.</p>
+                    <p>Automatic saving with localStorage ensures your estimates are never lost, even without a backend infrastructure.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">📊</div>
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="40" height="40" rx="8" fill="#0066cc" opacity="0.1"/>
+                            <rect x="12" y="14" width="16" height="12" stroke="#0066cc" stroke-width="2" rx="2"/>
+                        </svg>
+                    </div>
                     <h3>Export & Reporting</h3>
-                    <p>Generate professional reports and export your data for stakeholder presentations and approval processes.</p>
+                    <p>Generate professional reports and export your data for stakeholder presentations and seamless approval processes.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="use-cases" id="use-cases">
-        <div class="use-cases-container">
+    <!-- Solutions Section -->
+    <section class="solutions-section" id="solutions">
+        <div class="content-container">
             <div class="section-header">
-                <h2>Built for real-world scenarios</h2>
-                <p>From small projects to enterprise implementations</p>
+                <span class="section-label">Built for Real-World Scenarios</span>
+                <h2>Tailored Solutions for Every Project Type</h2>
+                <p class="section-description">From small development projects to large-scale enterprise implementations</p>
             </div>
-            <div class="use-cases-grid">
-                <div class="use-case-card">
-                    <h3>Software Development Projects</h3>
-                    <ul>
-                        <li>Calculate developer and tester costs</li>
+            <div class="solutions-grid">
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <h3>Software Development Projects</h3>
+                        <span class="solution-badge">Popular</span>
+                    </div>
+                    <p class="solution-description">Comprehensive cost planning for development initiatives of any scale.</p>
+                    <ul class="solution-features">
+                        <li>Calculate developer and tester costs with precision</li>
                         <li>Factor in cloud infrastructure expenses</li>
                         <li>Track third-party API and licensing costs</li>
                         <li>Account for DevOps and deployment resources</li>
                     </ul>
                 </div>
-                <div class="use-case-card">
-                    <h3>Infrastructure Upgrades</h3>
-                    <ul>
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <h3>Infrastructure Upgrades</h3>
+                    </div>
+                    <p class="solution-description">Strategic planning for hardware and system modernization projects.</p>
+                    <ul class="solution-features">
                         <li>Plan hardware and software procurement</li>
                         <li>Estimate installation and configuration time</li>
                         <li>Include vendor maintenance contracts</li>
                         <li>Factor in training and transition costs</li>
                     </ul>
                 </div>
-                <div class="use-case-card">
-                    <h3>Digital Transformation</h3>
-                    <ul>
-                        <li>Complex multi-phase project planning</li>
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <h3>Digital Transformation</h3>
+                        <span class="solution-badge">Enterprise</span>
+                    </div>
+                    <p class="solution-description">Complex multi-phase project planning for organizational change.</p>
+                    <ul class="solution-features">
+                        <li>Multi-phase project planning and budgeting</li>
                         <li>Change management resource allocation</li>
                         <li>Integration and migration budgeting</li>
                         <li>Stakeholder communication costs</li>
                     </ul>
                 </div>
-                <div class="use-case-card">
-                    <h3>Consulting Engagements</h3>
-                    <ul>
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <h3>Consulting Engagements</h3>
+                    </div>
+                    <p class="solution-description">Flexible resource planning for professional services delivery.</p>
+                    <ul class="solution-features">
                         <li>Blend internal and external resources</li>
                         <li>Multi-currency client billing</li>
                         <li>Flexible rate card management</li>
@@ -404,78 +195,135 @@
         </div>
     </section>
 
-    <section class="architecture" id="architecture">
-        <div class="architecture-container">
-            <h2>Built on solid architectural principles</h2>
-            <p>Our Initialization Manager pattern ensures reliability, maintainability, and seamless module integration</p>
-            
-            <div class="architecture-features">
-                <div class="arch-feature">
-                    <h4>⚡ Predictable Load Order</h4>
-                    <p>Centralized initialization ensures modules load in the correct sequence every time</p>
+    <!-- Benefits Section -->
+    <section class="benefits-section" id="benefits">
+        <div class="content-container">
+            <div class="benefits-layout">
+                <div class="benefits-content">
+                    <span class="section-label">Why Choose Zyantik</span>
+                    <h2>Built on Solid Architectural Principles</h2>
+                    <p class="benefits-intro">Our Initialization Manager pattern ensures reliability, maintainability, and seamless module integration for enterprise-grade performance.</p>
+                    
+                    <div class="benefit-items">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                <h4>Predictable Load Order</h4>
+                                <p>Centralized initialization ensures modules load in the correct sequence every time, eliminating race conditions.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                <h4>Dependency Management</h4>
+                                <p>Automatic checking of required dependencies before proceeding with initialization for rock-solid reliability.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                <h4>Error Resilience</h4>
+                                <p>Graceful fallbacks when modules are unavailable, keeping your workflow uninterrupted and productive.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="knowledge-centre.html" class="btn btn-primary">Explore Technical Documentation</a>
                 </div>
-                <div class="arch-feature">
-                    <h4>🔗 Dependency Management</h4>
-                    <p>Automatic checking of required dependencies before proceeding with initialization</p>
-                </div>
-                <div class="arch-feature">
-                    <h4>🛡️ Error Resilience</h4>
-                    <p>Graceful fallbacks when modules are unavailable, keeping your workflow uninterrupted</p>
+                <div class="benefits-visual">
+                    <div class="visual-placeholder">
+                        <div class="placeholder-content">
+                            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="80" height="80" rx="16" fill="#0066cc" opacity="0.1"/>
+                                <path d="M40 20L50 30H30L40 20Z" stroke="#0066cc" stroke-width="2" stroke-linejoin="round"/>
+                                <path d="M20 40H60" stroke="#0066cc" stroke-width="2"/>
+                                <circle cx="40" cy="55" r="10" stroke="#0066cc" stroke-width="2"/>
+                            </svg>
+                            <p>Architecture Diagram Placeholder</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <a href="knowledge-centre.html" class="btn-primary" style="margin-top: 2rem; display: inline-block;">Explore Technical Documentation</a>
         </div>
     </section>
 
+    <!-- Testimonial Section -->
+    <section class="testimonial-section">
+        <div class="content-container">
+            <div class="testimonial-content">
+                <blockquote>
+                    <p>"Zyantik has transformed how we approach project estimation. What used to take days now takes hours, with better accuracy and comprehensive reporting."</p>
+                    <footer>
+                        <strong>Sarah Mitchell</strong>
+                        <span>IT Project Manager, Tech Solutions Inc.</span>
+                    </footer>
+                </blockquote>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
     <section class="cta-section">
-        <div class="cta-content">
-            <h2>Ready to simplify your project estimation?</h2>
-            <p>Join project managers who trust our tool for accurate, comprehensive cost planning</p>
-            <div class="hero-buttons" style="justify-content: center;">
-                <a href="#demo" class="btn-primary">Request a Demo</a>
-                <a href="knowledge-centre.html" class="btn-secondary">Read Documentation</a>
+        <div class="content-container">
+            <div class="cta-content">
+                <h2>Ready to Simplify Your Project Estimation?</h2>
+                <p>Join project managers who trust our tool for accurate, comprehensive cost planning</p>
+                <div class="cta-buttons">
+                    <a href="#demo" class="btn btn-primary btn-lg">Request a Demo</a>
+                    <a href="knowledge-centre.html" class="btn btn-outline-white btn-lg">View Documentation</a>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer>
+    <!-- Footer -->
+    <footer class="main-footer">
         <div class="footer-container">
-            <div class="footer-brand">
-                <h3>Zyantik</h3>
-                <p>Innovation Through Technology. We build tools that transform how businesses plan, estimate, and execute ICT projects.</p>
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <img src="assets/zyantik-logo.png" alt="Zyantik Logo">
+                        <span class="logo-text">Zyantik</span>
+                    </div>
+                    <p>Innovation Through Technology. We build tools that transform how businesses plan, estimate, and execute ICT projects.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#solutions">Solutions</a></li>
+                        <li><a href="#benefits">Benefits</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="knowledge-centre.html">Knowledge Centre</a></li>
+                        <li><a href="knowledge-centre.html#getting-started">Getting Started</a></li>
+                        <li><a href="knowledge-centre.html#developer-guide">Developer Guide</a></li>
+                        <li><a href="knowledge-centre.html#api-reference">API Reference</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#about">About Zyantik</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#careers">Careers</a></li>
+                        <li><a href="#support">Support</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="footer-links">
-                <h4>Product</h4>
-                <ul>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#use-cases">Use Cases</a></li>
-                    <li><a href="#architecture">Architecture</a></li>
-                    <li><a href="#pricing">Pricing</a></li>
-                </ul>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Zyantik. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a>
+                </div>
             </div>
-            <div class="footer-links">
-                <h4>Resources</h4>
-                <ul>
-                    <li><a href="knowledge-centre.html">Knowledge Centre</a></li>
-                    <li><a href="knowledge-centre.html#getting-started">Getting Started</a></li>
-                    <li><a href="knowledge-centre.html#developer-guide">Developer Guide</a></li>
-                    <li><a href="knowledge-centre.html#api-reference">API Reference</a></li>
-                </ul>
-            </div>
-            <div class="footer-links">
-                <h4>Company</h4>
-                <ul>
-                    <li><a href="#about">About Zyantik</a></li>
-                    <li><a href="#contact">Contact Us</a></li>
-                    <li><a href="#careers">Careers</a></li>
-                    <li><a href="#support">Support</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Zyantik. All rights reserved. | <a href="#privacy" style="color: #999;">Privacy Policy</a> | <a href="#terms" style="color: #999;">Terms of Service</a></p>
         </div>
     </footer>
+
 </body>
 </html>
