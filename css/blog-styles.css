@@ -3,6 +3,28 @@
    Extends the main styles.css
    ============================================ */
 
+/* === FORCE DARK NAVIGATION TO MATCH INDEX === */
+/* Ensure blog nav matches the dark theme from index.html */
+body nav,
+body .top-nav {
+    background: rgba(26, 26, 26, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+body nav .logo-text {
+    color: #ffffff !important;
+}
+
+body nav .nav-links a {
+    color: #e0e0e0 !important;
+}
+
+body nav .nav-links a:hover,
+body nav .nav-links a.active {
+    color: #ffffff !important;
+}
+
 /* === BLOG SECTION CONTAINER === */
 .blog-section {
     padding: var(--spacing-2xl) 5%;
