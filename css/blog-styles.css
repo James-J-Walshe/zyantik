@@ -1,11 +1,11 @@
-/* ==========================================================================
-   BLOG SECTION STYLES
-   Add this to your existing styles.css file
-   ========================================================================== */
+/* ============================================
+   ZYANTIK BLOG SECTION STYLES
+   Extends the main styles.css
+   ============================================ */
 
-/* Blog Section Container */
+/* === BLOG SECTION CONTAINER === */
 .blog-section {
-    padding: 6rem 5%;
+    padding: var(--spacing-2xl) 5%;
     background: var(--bg-primary);
 }
 
@@ -14,17 +14,16 @@
     margin: 0 auto;
 }
 
-/* Blog Hero */
+/* === BLOG HERO === */
 .blog-hero {
     margin-top: 80px;
-    padding: 4rem 5%;
+    padding: var(--spacing-2xl) 5%;
     background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
     text-align: center;
 }
 
 .blog-hero h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-sm);
 }
 
 .blog-hero p {
@@ -34,11 +33,11 @@
     margin: 0 auto;
 }
 
-/* Category Filters */
+/* === CATEGORY FILTERS === */
 .blog-filters {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 3rem;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xl);
     flex-wrap: wrap;
     justify-content: center;
 }
@@ -46,31 +45,36 @@
 .filter-btn {
     padding: 0.75rem 1.5rem;
     border: 2px solid var(--border-color);
-    background: white;
+    background: var(--bg-primary);
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: all var(--transition-normal);
     font-weight: 500;
     font-size: 0.9rem;
+    color: var(--text-medium);
 }
 
-.filter-btn:hover,
+.filter-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
 .filter-btn.active {
     border-color: var(--primary-color);
     background: var(--primary-color);
     color: white;
 }
 
-/* Featured Post */
+/* === FEATURED POST === */
 .featured-post {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    margin-bottom: 4rem;
-    background: white;
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
+    background: var(--bg-primary);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
 }
 
 .featured-post-image {
@@ -87,19 +91,20 @@
 
 .post-category {
     position: absolute;
-    top: 1.5rem;
-    left: 1.5rem;
+    top: var(--spacing-md);
+    left: var(--spacing-md);
     background: var(--primary-color);
     color: white;
     padding: 0.5rem 1rem;
     border-radius: var(--radius-sm);
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .featured-post-content {
-    padding: 3rem;
+    padding: var(--spacing-xl);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -107,9 +112,9 @@
 
 .post-meta {
     display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
-    color: var(--text-light);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-muted);
     font-size: 0.875rem;
 }
 
@@ -123,38 +128,39 @@
 
 .featured-post-content h3 {
     font-size: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-sm);
     line-height: 1.3;
+    color: var(--text-dark);
 }
 
 .featured-post-content p {
     color: var(--text-light);
     line-height: 1.7;
-    margin-bottom: 2rem;
+    margin-bottom: var(--spacing-lg);
 }
 
-/* Blog Grid */
+/* === BLOG GRID === */
 .blog-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    margin-bottom: 3rem;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
 }
 
-/* Blog Card */
+/* === BLOG CARD === */
 .blog-card {
-    background: white;
+    background: var(--bg-secondary);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    border: 1px solid var(--border-color);
+    border: 1px solid transparent;
     transition: all var(--transition-normal);
     cursor: pointer;
 }
 
 .blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
     border-color: var(--primary-color);
-    box-shadow: 0 8px 30px rgba(0, 102, 204, 0.1);
-    transform: translateY(-5px);
 }
 
 .blog-card-image {
@@ -176,19 +182,20 @@
 }
 
 .blog-card-content {
-    padding: 2rem;
+    padding: var(--spacing-lg);
 }
 
 .blog-card-content h3 {
     font-size: 1.3rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-sm);
     line-height: 1.3;
+    color: var(--text-dark);
 }
 
 .blog-card-content p {
     color: var(--text-light);
     line-height: 1.6;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-md);
 }
 
 .read-more {
@@ -202,45 +209,51 @@
 }
 
 .read-more:hover {
-    color: var(--secondary-color);
+    color: var(--primary-dark);
     gap: 0.75rem;
 }
 
-/* Load More Button */
+/* === PAGINATION === */
 .blog-load-more {
     text-align: center;
-    padding: 2rem 0;
+    padding: var(--spacing-lg) 0;
 }
 
-/* Pagination */
 .pagination {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
-    margin-top: 3rem;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-xl);
 }
 
 .page-btn {
     padding: 0.75rem 1.25rem;
     border: 1px solid var(--border-color);
-    background: white;
+    background: var(--bg-primary);
     border-radius: var(--radius-sm);
     cursor: pointer;
     transition: all var(--transition-normal);
     font-weight: 500;
+    color: var(--text-medium);
 }
 
-.page-btn:hover,
+.page-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
 .page-btn.active {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
 }
 
-/* Individual Blog Post Styles */
+/* === INDIVIDUAL BLOG POST === */
+
+/* Post Hero Section */
 .post-hero {
     margin-top: 80px;
-    padding: 4rem 5%;
+    padding: var(--spacing-2xl) 5%;
     background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
     color: white;
     text-align: center;
@@ -251,38 +264,40 @@
     background: rgba(255, 255, 255, 0.2);
     padding: 0.5rem 1rem;
     border-radius: var(--radius-sm);
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
-    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-sm);
 }
 
 .post-hero h1 {
-    font-size: 3rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-md);
     line-height: 1.2;
 }
 
 .post-meta-hero {
     display: flex;
     justify-content: center;
-    gap: 2rem;
+    gap: var(--spacing-lg);
     font-size: 1rem;
     opacity: 0.9;
 }
 
+/* Post Container */
 .post-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 4rem 5%;
+    padding: var(--spacing-2xl) 5%;
 }
 
+/* Post Author */
 .post-author {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 3rem;
-    padding: 1.5rem;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-md);
     background: var(--bg-secondary);
     border-radius: var(--radius-md);
 }
@@ -303,14 +318,16 @@
 .author-info h4 {
     margin-bottom: 0.25rem;
     font-size: 1.1rem;
+    color: var(--text-dark);
 }
 
 .author-info p {
     color: var(--text-light);
     font-size: 0.875rem;
+    margin: 0;
 }
 
-/* Post Content Styling */
+/* === POST CONTENT STYLING === */
 .post-content {
     line-height: 1.8;
     font-size: 1.1rem;
@@ -319,64 +336,67 @@
 .post-content .lead {
     font-size: 1.25rem;
     font-weight: 500;
-    color: var(--text-dark);
-    margin-bottom: 2rem;
+    color: var(--text-medium);
+    margin-bottom: var(--spacing-lg);
 }
 
 .post-content h2 {
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-md);
     font-size: 2rem;
     color: var(--text-dark);
 }
 
 .post-content h3 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-sm);
     font-size: 1.5rem;
     color: var(--text-dark);
 }
 
 .post-content p {
-    margin-bottom: 1.5rem;
-    color: var(--text-dark);
+    margin-bottom: var(--spacing-md);
+    color: var(--text-light);
 }
 
 .post-content ul,
 .post-content ol {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-md);
     padding-left: 2rem;
 }
 
 .post-content li {
     margin-bottom: 0.75rem;
-    color: var(--text-dark);
+    color: var(--text-light);
 }
 
 .post-content blockquote {
     border-left: 4px solid var(--primary-color);
-    padding: 1.5rem;
-    margin: 2rem 0;
+    padding: var(--spacing-md);
+    margin: var(--spacing-lg) 0;
     background: var(--bg-secondary);
     border-radius: var(--radius-sm);
     font-style: italic;
+    color: var(--text-medium);
 }
 
 .post-content code {
-    background: var(--bg-secondary);
-    padding: 0.25rem 0.5rem;
-    border-radius: var(--radius-sm);
-    font-family: 'Courier New', monospace;
+    background: var(--code-bg);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
     font-size: 0.9em;
+    color: var(--danger);
 }
 
 .post-content pre {
     background: #1e1e1e;
     color: #d4d4d4;
-    padding: 1.5rem;
+    padding: var(--spacing-md);
     border-radius: var(--radius-md);
     overflow-x: auto;
-    margin: 2rem 0;
+    margin: var(--spacing-lg) 0;
+    border: 1px solid #333;
 }
 
 .post-content pre code {
@@ -385,8 +405,9 @@
     color: #d4d4d4;
 }
 
+/* Post Images */
 .post-image {
-    margin: 2rem 0;
+    margin: var(--spacing-lg) 0;
     border-radius: var(--radius-lg);
     overflow: hidden;
 }
@@ -397,39 +418,53 @@
 }
 
 .post-image figcaption {
-    padding: 1rem;
+    padding: var(--spacing-sm);
     background: var(--bg-secondary);
     font-size: 0.875rem;
     color: var(--text-light);
     text-align: center;
 }
 
-/* Key Takeaway Box */
+/* === KEY TAKEAWAY BOX === */
 .key-takeaway {
-    background: linear-gradient(135deg, #e6f3ff 0%, #f0f9ff 100%);
+    background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
     border-left: 4px solid var(--primary-color);
-    padding: 2rem;
-    margin: 2rem 0;
+    padding: var(--spacing-lg);
+    margin: var(--spacing-lg) 0;
     border-radius: var(--radius-md);
 }
 
 .key-takeaway h3 {
     color: var(--primary-color);
     margin-top: 0;
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-sm);
     font-size: 1.3rem;
 }
 
 .key-takeaway p,
 .key-takeaway ul {
     margin-bottom: 0;
+    color: var(--text-medium);
 }
 
-/* Post Tags */
+.key-takeaway ul {
+    padding-left: var(--spacing-lg);
+}
+
+.key-takeaway li {
+    color: var(--text-medium);
+}
+
+/* === POST TAGS === */
 .post-tags {
-    margin-top: 3rem;
-    padding-top: 2rem;
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
     border-top: 1px solid var(--border-color);
+}
+
+.post-tags strong {
+    color: var(--text-dark);
+    margin-right: var(--spacing-sm);
 }
 
 .tag {
@@ -437,78 +472,85 @@
     background: var(--bg-secondary);
     padding: 0.5rem 1rem;
     border-radius: var(--radius-sm);
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-right: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
     font-size: 0.875rem;
-    color: var(--text-dark);
+    color: var(--text-medium);
     text-decoration: none;
     transition: all var(--transition-normal);
+    border: 1px solid transparent;
 }
 
 .tag:hover {
     background: var(--primary-color);
     color: white;
+    border-color: var(--primary-color);
 }
 
-/* Post Navigation */
+/* === POST NAVIGATION === */
 .post-navigation {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-top: 3rem;
-    padding-top: 3rem;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-xl);
     border-top: 2px solid var(--border-color);
 }
 
 .nav-post {
-    padding: 1.5rem;
+    padding: var(--spacing-md);
     background: var(--bg-secondary);
     border-radius: var(--radius-md);
     text-decoration: none;
     transition: all var(--transition-normal);
+    border: 1px solid transparent;
 }
 
 .nav-post:hover {
-    background: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: var(--bg-primary);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
 }
 
 .nav-label {
-    font-size: 0.875rem;
-    color: var(--text-light);
+    font-size: 0.75rem;
+    color: var(--text-muted);
     text-transform: uppercase;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-xs);
     display: block;
 }
 
 .nav-title {
     color: var(--text-dark);
     font-weight: 600;
+    font-size: 1rem;
 }
 
-/* Related Posts */
+/* === RELATED POSTS === */
 .related-posts {
-    margin-top: 4rem;
-    padding: 3rem;
+    margin-top: var(--spacing-2xl);
+    padding: var(--spacing-xl);
     background: var(--bg-secondary);
     border-radius: var(--radius-lg);
 }
 
 .related-posts h2 {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-dark);
 }
 
 .related-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    gap: var(--spacing-lg);
 }
 
 .related-card {
-    background: white;
-    padding: 1.5rem;
+    background: var(--bg-primary);
+    padding: var(--spacing-md);
     border-radius: var(--radius-md);
     text-decoration: none;
     transition: all var(--transition-normal);
@@ -516,7 +558,7 @@
 }
 
 .related-card:hover {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
     transform: translateY(-5px);
     border-color: var(--primary-color);
 }
@@ -524,6 +566,7 @@
 .related-card h4 {
     margin-bottom: 0.75rem;
     color: var(--text-dark);
+    font-size: 1.1rem;
 }
 
 .related-card p {
@@ -532,7 +575,9 @@
     margin: 0;
 }
 
-/* Responsive Design */
+/* === RESPONSIVE DESIGN === */
+
+/* Tablet */
 @media (max-width: 1024px) {
     .blog-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -551,6 +596,7 @@
     }
 }
 
+/* Mobile */
 @media (max-width: 768px) {
     .blog-grid {
         grid-template-columns: 1fr;
@@ -563,7 +609,7 @@
 
     .post-meta-hero {
         flex-direction: column;
-        gap: 0.5rem;
+        gap: var(--spacing-xs);
     }
 
     .post-navigation {
@@ -579,10 +625,40 @@
     }
 
     .featured-post-content {
-        padding: 2rem;
+        padding: var(--spacing-lg);
     }
 
     .featured-post-content h3 {
         font-size: 1.5rem;
+    }
+
+    .post-container {
+        padding: var(--spacing-lg) 3%;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .blog-section {
+        padding: var(--spacing-lg) 3%;
+    }
+
+    .blog-hero,
+    .post-hero {
+        padding: var(--spacing-lg) 3%;
+    }
+
+    .filter-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+    }
+
+    .blog-card-content,
+    .featured-post-content {
+        padding: var(--spacing-sm);
+    }
+
+    .post-content {
+        font-size: 1rem;
     }
 }
