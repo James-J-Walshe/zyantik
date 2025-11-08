@@ -3,11 +3,11 @@
    Extends the main styles.css
    ============================================ */
 
-/* === FORCE DARK NAVIGATION TO MATCH INDEX === */
-/* Ensure blog nav matches the dark theme from index.html */
+/* === FORCE DARK NAVY NAVIGATION TO MATCH INDEX === */
+/* Ensure blog nav matches the navy blue theme from index.html */
 body nav,
 body .top-nav {
-    background: rgba(26, 26, 26, 0.95) !important;
+    background: #1e2a3a !important;  /* Dark navy blue to match index */
     backdrop-filter: blur(10px) !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
 }
