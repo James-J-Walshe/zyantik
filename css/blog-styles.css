@@ -3,6 +3,21 @@
    Extends the main styles.css
    ============================================ */
 
+/* === NAVIGATION FIX FOR LIGHT HEADER === */
+/* Override nav colors to work with light background */
+nav .logo-text {
+    color: #1a1a1a !important;  /* Dark text instead of white */
+}
+
+nav .nav-links a {
+    color: #555 !important;  /* Dark gray for visibility */
+}
+
+nav .nav-links a:hover,
+nav .nav-links a.active {
+    color: var(--primary-color) !important;
+}
+
 /* === BLOG SECTION CONTAINER === */
 .blog-section {
     padding: var(--spacing-2xl) 5%;
