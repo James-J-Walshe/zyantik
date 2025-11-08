@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Zyantik Project Estimating Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Blog-specific styles */
+        .blog-hero {
+            margin-top: 80px;
+            padding: 4rem 5%;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            text-align: center;
+        }
+
+        .blog-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .blog-hero p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .blog-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 5%;
+        }
+
+        .blog-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-color);
+            background: white;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            font-weight: 500;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .featured-post {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .featured-post-image {
+            position: relative;
+            min-height: 400px;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+        }
+
+        .featured-post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-category {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .featured-post-content {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .featured-post-content h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .featured-post-content p {
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all var(--transition-normal);
+        }
+
+        .blog-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 30px rgba(0, 102, 204, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .blog-card-image {
+            position: relative;
+            height: 200px;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+        }
+
+        .blog-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-card-content {
+            padding: 2rem;
+        }
+
+        .blog-card-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .blog-card-content p {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .read-more {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all var(--transition-normal);
+        }
+
+        .read-more:hover {
+            color: var(--secondary-color);
+        }
+
+        .blog-load-more {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .page-btn {
+            padding: 0.75rem 1.25rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        @media (max-width: 1024px) {
+            .blog-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .featured-post {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .blog-hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="assets/zyantik-logo.png" alt="Zyantik Logo">
+            <span class="logo-text">Zyantik</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html#features">Features</a></li>
+            <li><a href="index.html#use-cases">Use Cases</a></li>
+            <li><a href="index.html#architecture">Architecture</a></li>
+            <li><a href="knowledge-centre.html">Knowledge Centre</a></li>
+            <li><a href="blog.html" class="active">Blog</a></li>
+        </ul>
+        <a href="#demo" class="btn-primary">Request Demo</a>
+    </nav>
+
+    <section class="blog-hero">
+        <h1>Zyantik Blog</h1>
+        <p>Insights, tutorials, and best practices for ICT project estimation and management</p>
+    </section>
+
+    <div class="blog-container">
+        <!-- Category Filters -->
+        <div class="blog-filters">
+            <button class="filter-btn active" data-category="all">All Posts</button>
+            <button class="filter-btn" data-category="technical">Technical</button>
+            <button class="filter-btn" data-category="features">Features</button>
+            <button class="filter-btn" data-category="best-practices">Best Practices</button>
+            <button class="filter-btn" data-category="tutorial">Tutorials</button>
+            <button class="filter-btn" data-category="case-study">Case Studies</button>
+            <button class="filter-btn" data-category="tips">Tips & Tricks</button>
+        </div>
+
+        <!-- Featured Blog Post -->
+        <div class="featured-post">
+            <div class="featured-post-image">
+                <img src="assets/blog/featured-post.jpg" alt="Featured blog post">
+                <span class="post-category">Featured</span>
+            </div>
+            <div class="featured-post-content">
+                <div class="post-meta">
+                    <span class="post-date">November 8, 2024</span>
+                    <span class="post-read-time">5 min read</span>
+                </div>
+                <h3>Mastering ICT Project Cost Estimation: A Complete Guide</h3>
+                <p>Learn the essential strategies and best practices for accurate project cost estimation. From resource allocation to risk management, we cover everything you need to know to deliver projects on budget and on time.</p>
+                <a href="blog/mastering-project-estimation.html" class="btn-primary">Read Article</a>
+            </div>
+        </div>
+
+        <!-- Blog Posts Grid -->
+        <div class="blog-grid">
+            <!-- Blog Post 1 -->
+            <article class="blog-card" data-category="technical">
+                <div class="blog-card-image">
+                    <img src="assets/blog/initialization-pattern.jpg" alt="Initialization Manager Pattern">
+                    <span class="post-category">Technical</span>
+                </div>
+                <div class="blog-card-content">
+                    <div class="post-meta">
+                        <span class="post-date">November 5, 2024</span>
+                        <span class="post-read-time">8 min read</span>
+                    </div>
+                    <h3>Understanding the Initialization Manager Pattern</h3>
+                    <p>Deep dive into our architectural approach for managing complex application initialization sequences and module dependencies.</p>
+                    <a href="blog/initialization-manager-pattern.html" class="read-more">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 2 -->
+            <article class="blog-card" data-category="features">
+                <div class="blog-card-image">
+                    <img src="assets/blog/currency-management.jpg" alt="Currency Management">
+                    <span class="post-category">Features</span>
+                </div>
+                <div class="blog-card-content">
+                    <div class="post-meta">
+                        <span class="post-date">November 1, 2024</span>
+                        <span class="post-read-time">6 min read</span>
+                    </div>
+                    <h3>Multi-Currency Support: Planning Global Projects</h3>
+                    <p>How to effectively manage project costs across 33 global currencies with built-in exchange rate management.</p>
+                    <a href="blog/multi-currency-support.html" class="read-more">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 3 -->
+            <article class="blog-card" data-category="best-practices">
+                <div class="blog-card-image">
+                    <img src="assets/blog/risk-assessment.jpg" alt="Risk Assessment">
+                    <span class="post-category">Best Practices</span>
+                </div>
+                <div class="blog-card-content">
+                    <div class="post-meta">
+                        <span class="post-date">October 28, 2024</span>
+                        <span class="post-read-time">7 min read</span>
+                    </div>
+                    <h3>Risk Assessment in Project Estimation</h3>
+                    <p>Learn how to identify, quantify, and mitigate risks in your project estimates with our built-in contingency planning tools.</p>
+                    <a href="blog/risk-assessment.html" class="read-more">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 4 -->
+            <article class="blog-card" data-category="tutorial">
+                <div class="blog-card-image">
+                    <img src="assets/blog/timeline-planning.jpg" alt="Timeline Planning">
+                    <span class="post-category">Tutorial</span>
+                </div>
+                <div class="blog-card-content">
+                    <div class="post-meta">
+                        <span class="post-date">October 25, 2024</span>
+                        <span class="post-read-time">10 min read</span>
+                    </div>
+                    <h3>Dynamic Timeline Planning: A Step-by-Step Guide</h3>
+                    <p>Master the art of month-based project planning with our comprehensive tutorial on resource allocation across timelines.</p>
+                    <a href="blog/timeline-planning-guide.html" class="read-more">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 5 -->
+            <article class="blog-card" data-category="case-study">
+                <div class="blog-card-image">
+                    <img src="assets/blog/cost-breakdown.jpg" alt="Cost Breakdown">
+                    <span class="post-category">Case Study</span>
+                </div>
+                <div class="blog-card-content">
+                    <div class="post-meta">
+                        <span class="post-date">October 22, 2024</span>
+                        <span class="post-read-time">12 min read</span>
+                    </div>
+                    <h3>Case Study: Enterprise Digital Transformation</h3>
+                    <p>How a Fortune 500 company used our tool to estimate and track a $5M digital transformation project.</p>
+                    <a href="blog/enterprise-case-study.html" class="read-more">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 6 -->
+            <article class="blog-card" data-category="tips">
+                <div class="blog-card-image">
+                    <img src="assets/blog/export-reporting.jpg" alt="Export and Reporting">
+                    <span class="post-category">Tips & Tricks</span>
+                </div>
+                <div class="blog-card-content">
+                    <div class="post-meta">
+                        <span class="post-date">October 18, 2024</span>
+                        <span class="post-read-time">5 min read</span>
+                    </div>
+                    <h3>Creating Professional Reports for Stakeholders</h3>
+                    <p>Tips and best practices for generating compelling cost reports that win stakeholder approval.</p>
+                    <a href="blog/professional-reporting.html" class="read-more">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 7 -->
+            <article class="blog-card" data-category="tutorial">
+                <div class="blog-card-image">
+                    <img src="assets/blog/resource-allocation.jpg" alt="Resource Allocation">
+                    <span class="post-category">Tutorial</span>
+                </div>
+                <div class="blog-card-content">
+                    <div class="post-meta">
+                        <span class="post-date">October 15, 2024</span>
+                        <span class="post-read-time">9 min read</span>
+                    </div>
+                    <h3>Optimizing Resource Allocation Strategies</h3>
+                    <p>A practical guide to balancing internal and external resources for maximum project efficiency.</p>
+                    <a href="blog/resource-allocation.html" class="read-more">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 8 -->
+            <article class="blog-card" data-category="features">
+                <div class="blog-card-image">
+                    <img src="assets/blog/data-persistence.jpg" alt="Data Persistence">
+                    <span class="post-category">Features</span>
+                </div>
+                <div class="blog-card-content">
+                    <div class="post-meta">
+                        <span class="post-date">October 12, 2024</span>
+                        <span class="post-read-time">6 min read</span>
+                    </div>
+                    <h3>How Our Data Persistence Works</h3>
+                    <p>Understanding localStorage and automatic saving to ensure your project estimates are never lost.</p>
+                    <a href="blog/data-persistence.html" class="read-more">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Blog Post 9 -->
+            <article class="blog-card" data-category="best-practices">
+                <div class="blog-card-image">
+                    <img src="assets/blog/vendor-management.jpg" alt="Vendor Management">
+                    <span class="post-category">Best Practices</span>
+                </div>
+                <div class="blog-card-content">
+                    <div class="post-meta">
+                        <span class="post-date">October 8, 2024</span>
+                        <span class="post-read-time">7 min read</span>
+                    </div>
+                    <h3>Vendor and Tool Cost Management</h3>
+                    <p>Best practices for tracking third-party costs and negotiating better rates with vendors.</p>
+                    <a href="blog/vendor-management.html" class="read-more">Read More →</a>
+                </div>
+            </article>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">Next →</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>Zyantik</h3>
+                <p>Innovation Through Technology. We build tools that transform how businesses plan, estimate, and execute ICT projects.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="index.html#features">Features</a></li>
+                    <li><a href="index.html#use-cases">Use Cases</a></li>
+                    <li><a href="index.html#architecture">Architecture</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="knowledge-centre.html">Knowledge Centre</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="knowledge-centre.html#getting-started">Getting Started</a></li>
+                    <li><a href="knowledge-centre.html#developer-guide">Developer Guide</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#about">About Zyantik</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="#careers">Careers</a></li>
+                    <li><a href="#support">Support</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Zyantik. All rights reserved. | <a href="#privacy" style="color: #999;">Privacy Policy</a> | <a href="#terms" style="color: #999;">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Category filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const blogCards = document.querySelectorAll('.blog-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+
+                const category = btn.dataset.category;
+
+                blogCards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
