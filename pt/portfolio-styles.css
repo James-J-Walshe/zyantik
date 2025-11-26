@@ -1,0 +1,561 @@
+/* =========================================================================
+   ZYANTIK PORTFOLIO COST MANAGEMENT - STYLES
+   Custom styles for portfolio application
+   Extends base style.css with portfolio-specific components
+   ========================================================================= */
+
+/* Portfolio Upload Section */
+.portfolio-upload-section {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+}
+
+.upload-card {
+    background: white;
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.upload-card:hover {
+    border-color: #4f46e5;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+}
+
+.upload-card h2 {
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+    font-size: 1.5rem;
+}
+
+.upload-card p {
+    color: #6b7280;
+    margin-bottom: 2rem;
+}
+
+.btn-large {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.upload-status {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    display: none;
+}
+
+.upload-status.success {
+    background-color: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+}
+
+.upload-status.error {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    white-space: pre-wrap;
+}
+
+.upload-status.info {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+/* Portfolio Dashboard */
+.portfolio-dashboard {
+    padding: 0;
+}
+
+/* Summary Cards Grid */
+.summary-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.summary-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.summary-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.summary-card-content {
+    flex: 1;
+}
+
+.summary-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.summary-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* Dashboard Sections */
+.dashboard-section {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-section h3 {
+    margin: 0 0 1.5rem 0;
+    color: #374151;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+/* Chart Containers */
+.chart-container {
+    min-height: 300px;
+}
+
+/* Horizontal Bar Chart */
+.horizontal-bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.bar-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.bar-label {
+    min-width: 200px;
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.bar-container {
+    flex: 1;
+    height: 32px;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 0.5rem;
+    transition: width 0.3s ease;
+}
+
+.bar-value {
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+/* Timeline Chart */
+.timeline-chart {
+    display: flex;
+    gap: 1rem;
+    min-height: 250px;
+}
+
+.timeline-chart-bars {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    padding: 1rem 0;
+}
+
+.timeline-bar-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 40px;
+}
+
+.timeline-bar-container {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.timeline-bar {
+    width: 100%;
+    background: linear-gradient(180deg, #667eea 0%, #4f46e5 100%);
+    border-radius: 4px 4px 0 0;
+    transition: height 0.3s ease;
+    cursor: pointer;
+}
+
+.timeline-bar:hover {
+    background: linear-gradient(180deg, #764ba2 0%, #667eea 100%);
+}
+
+.timeline-label {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+}
+
+.timeline-y-axis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem 0;
+    height: 200px;
+}
+
+.y-axis-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: right;
+}
+
+/* Projects List */
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.project-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.project-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.project-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.project-name {
+    margin: 0 0 0.25rem 0;
+    color: #1f2937;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.project-file-name {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.project-card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-label {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.detail-value {
+    color: #374151;
+    font-weight: 500;
+}
+
+.cost-value {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #059669;
+}
+
+.project-card-breakdown {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.breakdown-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.breakdown-label {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.breakdown-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+/* Timeline Table */
+.timeline-container,
+.comparison-container {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.timeline-table-scroll,
+.comparison-table-scroll {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.timeline-table,
+.comparison-table {
+    min-width: 800px;
+}
+
+.timeline-table th,
+.comparison-table th {
+    white-space: nowrap;
+}
+
+.project-list-cell {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.total-row {
+    background-color: #f9fafb;
+    font-weight: 600;
+}
+
+.total-row td {
+    border-top: 2px solid #d1d5db;
+}
+
+/* Comparison Controls */
+.comparison-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.comparison-controls label {
+    font-weight: 500;
+    color: #374151;
+}
+
+.comparison-select {
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    color: #374151;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.comparison-select:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #9ca3af;
+}
+
+.empty-state svg {
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Alert Container */
+.alert-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+}
+
+.alert {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.alert-success {
+    background-color: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+}
+
+.alert-error {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.alert-info {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .summary-cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bar-label {
+        min-width: 120px;
+        font-size: 0.75rem;
+    }
+
+    .timeline-chart {
+        flex-direction: column;
+    }
+
+    .timeline-y-axis {
+        flex-direction: row;
+        height: auto;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .project-card-breakdown {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .comparison-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .upload-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .summary-value {
+        font-size: 1.5rem;
+    }
+
+    .timeline-chart-bars {
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+
+    .timeline-bar-column {
+        min-width: 30px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .portfolio-upload-section,
+    .header-controls,
+    .tab-navigation,
+    .section-actions,
+    .btn,
+    button {
+        display: none !important;
+    }
+
+    .portfolio-dashboard {
+        display: block !important;
+    }
+
+    .project-card,
+    .dashboard-section,
+    .timeline-container,
+    .comparison-container {
+        box-shadow: none;
+        border: 1px solid #e5e7eb;
+        page-break-inside: avoid;
+    }
+}

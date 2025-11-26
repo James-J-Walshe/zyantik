@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Cost Management | Zyantik</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="Styles/portfolio-styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <!-- Zyantik Logo -->
+                    <div class="header-logo">
+                        <img src="images/zyantik-logo.png" alt="Zyantik Logo" style="height: 40px; width: auto;">
+                    </div>
+                    
+                    <!-- Page Title -->
+                    <h1 class="header-title">Portfolio Cost Management</h1>
+                </div>
+                
+                <!-- Header Controls -->
+                <div class="header-controls">
+                    <!-- Back to Main App -->
+                    <a href="index.html" class="btn btn-secondary">
+                        <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; margin-right: 8px;">
+                            <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" fill="currentColor"/>
+                        </svg>
+                        Back to Estimator
+                    </a>
+                    
+                    <!-- Export Portfolio Button -->
+                    <button id="exportPortfolioBtn" class="btn btn-primary" style="display: none;">
+                        <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; margin-right: 8px;">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" fill="currentColor"/>
+                        </svg>
+                        Export Portfolio
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-view">
+            <!-- Tab Navigation -->
+            <nav class="tab-navigation">
+                <button class="tab-btn active" data-tab="dashboard">
+                    <svg viewBox="0 0 24 24" style="width: 20px; height: 20px;">
+                        <path d="M13,3V9H21V3M13,21H21V11H13M3,21H11V15H3M3,13H11V3H3V13Z" fill="currentColor"/>
+                    </svg>
+                    Dashboard
+                </button>
+                <button class="tab-btn" data-tab="projects">
+                    <svg viewBox="0 0 24 24" style="width: 20px; height: 20px;">
+                        <path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z" fill="currentColor"/>
+                    </svg>
+                    Loaded Projects
+                </button>
+                <button class="tab-btn" data-tab="timeline">
+                    <svg viewBox="0 0 24 24" style="width: 20px; height: 20px;">
+                        <path d="M2,2H4V20H22V22H2V2M7,10H17V13H7V10M11,15H21V18H11V15M6,5H16V8H6V5Z" fill="currentColor"/>
+                    </svg>
+                    Cost Timeline
+                </button>
+                <button class="tab-btn" data-tab="comparison">
+                    <svg viewBox="0 0 24 24" style="width: 20px; height: 20px;">
+                        <path d="M9,5V9H21V5M9,19H21V15H9M9,14H21V10H9M4,9H8V5H4M4,19H8V15H4M4,14H8V10H4V14Z" fill="currentColor"/>
+                    </svg>
+                    Project Comparison
+                </button>
+            </nav>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content active">
+                <div class="content">
+                    <!-- File Upload Section -->
+                    <div class="portfolio-upload-section">
+                        <div class="upload-card">
+                            <svg viewBox="0 0 24 24" style="width: 48px; height: 48px; color: #4f46e5; margin-bottom: 1rem;">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/>
+                            </svg>
+                            <h2>Load Project Files</h2>
+                            <p>Select multiple project export files (.json) to create your portfolio view</p>
+                            <input type="file" id="portfolioFileInput" accept=".json" multiple style="display: none;">
+                            <button id="loadProjectsBtn" class="btn btn-primary btn-large">
+                                <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; margin-right: 8px;">
+                                    <path d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" fill="currentColor"/>
+                                </svg>
+                                Select Project Files
+                            </button>
+                            <div id="uploadStatus" class="upload-status"></div>
+                        </div>
+                    </div>
+
+                    <!-- Portfolio Dashboard (Hidden until projects loaded) -->
+                    <div id="portfolioDashboard" class="portfolio-dashboard" style="display: none;">
+                        <!-- Summary Cards -->
+                        <div class="summary-cards-grid">
+                            <div class="summary-card">
+                                <div class="summary-card-icon" style="background-color: #EEF2FF;">
+                                    <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; color: #4f46e5;">
+                                        <path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z" fill="currentColor"/>
+                                    </svg>
+                                </div>
+                                <div class="summary-card-content">
+                                    <div class="summary-label">Total Projects</div>
+                                    <div class="summary-value" id="totalProjectsCount">0</div>
+                                </div>
+                            </div>
+
+                            <div class="summary-card">
+                                <div class="summary-card-icon" style="background-color: #ECFDF5;">
+                                    <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; color: #059669;">
+                                        <path d="M7,15H9C9,16.08 10.37,17 12,17C13.63,17 15,16.08 15,15C15,13.9 13.96,13.5 11.76,12.97C9.64,12.44 7,11.78 7,9C7,7.21 8.47,5.69 10.5,5.18V3H13.5V5.18C15.53,5.69 17,7.21 17,9H15C15,7.92 13.63,7 12,7C10.37,7 9,7.92 9,9C9,10.1 10.04,10.5 12.24,11.03C14.36,11.56 17,12.22 17,15C17,16.79 15.53,18.31 13.5,18.82V21H10.5V18.82C8.47,18.31 7,16.79 7,15Z" fill="currentColor"/>
+                                    </svg>
+                                </div>
+                                <div class="summary-card-content">
+                                    <div class="summary-label">Total Portfolio Value</div>
+                                    <div class="summary-value" id="totalPortfolioValue">$0</div>
+                                </div>
+                            </div>
+
+                            <div class="summary-card">
+                                <div class="summary-card-icon" style="background-color: #FEF3C7;">
+                                    <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; color: #D97706;">
+                                        <path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" fill="currentColor"/>
+                                    </svg>
+                                </div>
+                                <div class="summary-card-content">
+                                    <div class="summary-label">Timeline Range</div>
+                                    <div class="summary-value" id="timelineRange">-</div>
+                                </div>
+                            </div>
+
+                            <div class="summary-card">
+                                <div class="summary-card-icon" style="background-color: #FCE7F3;">
+                                    <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; color: #DB2777;">
+                                        <path d="M16,17V19H2V17S2,13 9,13 16,17 16,17M12.5,7.5A3.5,3.5 0 0,1 9,11A3.5,3.5 0 0,1 5.5,7.5A3.5,3.5 0 0,1 9,4A3.5,3.5 0 0,1 12.5,7.5M15.94,13A5.32,5.32 0 0,1 18,17V19H22V17S22,13.37 15.94,13M15,4A3.39,3.39 0 0,0 13.07,4.59A5,5 0 0,1 13.07,10.41A3.39,3.39 0 0,0 15,11A3.5,3.5 0 0,0 18.5,7.5A3.5,3.5 0 0,0 15,4Z" fill="currentColor"/>
+                                    </svg>
+                                </div>
+                                <div class="summary-card-content">
+                                    <div class="summary-label">Peak Resource Demand</div>
+                                    <div class="summary-value" id="peakResourceDemand">0 FTE</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cost Breakdown Chart Section -->
+                        <div class="dashboard-section">
+                            <h3>Cost Distribution by Project</h3>
+                            <div id="costBreakdownChart" class="chart-container">
+                                <!-- Chart will be rendered here -->
+                            </div>
+                        </div>
+
+                        <!-- Monthly Cost Trend Section -->
+                        <div class="dashboard-section">
+                            <h3>Portfolio Cost Timeline</h3>
+                            <div id="costTrendChart" class="chart-container">
+                                <!-- Chart will be rendered here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loaded Projects Tab -->
+            <div id="projects-tab" class="tab-content">
+                <div class="content">
+                    <div class="section-actions">
+                        <h2>Loaded Projects</h2>
+                        <button id="addMoreProjectsBtn" class="btn btn-primary">
+                            <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; margin-right: 8px;">
+                                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+                            </svg>
+                            Add More Projects
+                        </button>
+                    </div>
+                    
+                    <div id="projectsList" class="projects-list">
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" style="width: 48px; height: 48px; color: #9CA3AF; margin-bottom: 1rem;">
+                                <path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z" fill="currentColor"/>
+                            </svg>
+                            <p>No projects loaded yet. Upload project files to get started.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Timeline Tab -->
+            <div id="timeline-tab" class="tab-content">
+                <div class="content">
+                    <h2>Portfolio Cost Timeline</h2>
+                    <div id="timelineTable" class="timeline-container">
+                        <!-- Timeline table will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Comparison Tab -->
+            <div id="comparison-tab" class="tab-content">
+                <div class="content">
+                    <div class="section-actions">
+                        <h2>Project Comparison</h2>
+                        <div class="comparison-controls">
+                            <label>Sort by:</label>
+                            <select id="comparisonSortBy" class="comparison-select">
+                                <option value="cost-desc">Total Cost (High to Low)</option>
+                                <option value="cost-asc">Total Cost (Low to High)</option>
+                                <option value="duration-desc">Duration (Longest First)</option>
+                                <option value="duration-asc">Duration (Shortest First)</option>
+                                <option value="name">Project Name (A-Z)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div id="comparisonTable" class="comparison-container">
+                        <!-- Comparison table will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Alert Container -->
+        <div id="alertContainer" class="alert-container"></div>
+    </div>
+
+    <!-- Load Modules -->
+    <script src="modules/portfolio_manager.js"></script>
+    <script src="modules/portfolio_cost_calculator.js"></script>
+    <script src="modules/portfolio_dashboard.js"></script>
+    <script src="modules/portfolio_init.js"></script>
+
+    <!-- Initialize Portfolio App -->
+    <script>
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                window.portfolioInitManager.initialize();
+            });
+        } else {
+            window.portfolioInitManager.initialize();
+        }
+    </script>
+</body>
+</html>
