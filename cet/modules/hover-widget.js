@@ -161,13 +161,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: 'estimator',
                 label: 'Cost Estimator',
                 iconSvg: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>',
-                url: 'index.html' // Current application - could link to home or refresh
+                url: "/cet/index.html" // Current application - could link to home or refresh
             },
             {
                 id: 'portfolio',
                 label: 'Portfolio Manager',
                 iconSvg: '<path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-1 12H5V8h14v10z"/>',
-                url: 'portfolio.html' // Update with actual URL when available
+                url: "/pt/index.html" // Update with actual URL when available
             }
             // Add more applications as needed:
             // {
