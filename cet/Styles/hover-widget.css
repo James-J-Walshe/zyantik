@@ -1,0 +1,131 @@
+/* Hover Widget Styles */
+.hover-widget-container {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 999; /* Below modals (1000) but above content */
+}
+
+.widget-panel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.panel-content {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+    width: 0;
+    height: 400px;
+    overflow: hidden;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 0 12px 12px 0;
+}
+
+.widget-tab {
+    background: rgba(30, 58, 95, 0.3);
+    width: 30px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0 12px 12px 0;
+}
+
+/* Removed the ::before pseudo-element with clip-path for cleaner appearance */
+
+.widget-tab-arrow {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 20px;
+    z-index: 1;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover state */
+.hover-widget-container:hover .widget-tab {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.hover-widget-container:hover .widget-tab-arrow {
+    color: white;
+    transform: translateX(3px);
+}
+
+.hover-widget-container:hover .panel-content {
+    width: 140px;
+    padding: 20px 15px;
+}
+
+/* Panel icons */
+.panel-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    opacity: 0;
+    transition: opacity 0.4s ease 0.15s;
+}
+
+.hover-widget-container:hover .panel-icons {
+    opacity: 1;
+}
+
+.icon-item {
+    background: white;
+    padding: 20px 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #2d3748;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+    line-height: 1.3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.icon-item:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.icon-item svg {
+    width: 32px;
+    height: 32px;
+    fill: #667eea;
+}
+
+.icon-item .icon-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: #374151;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .hover-widget-container {
+        display: none; /* Hide on mobile to avoid interference */
+    }
+}
+
+/* Ensure widget doesn't interfere with scrolling */
+body.widget-hover {
+    overflow: visible;
+}
