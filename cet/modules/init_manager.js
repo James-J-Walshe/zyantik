@@ -1,6 +1,7 @@
 // modules/init_manager.js
 // Initialization Manager - UPDATED VERSION WITH DROPDOWN MENU SUPPORT
 // Ensures proper loading order and dependency availability
+// Issue #134: Added Multi Resource Manager support
 
 class InitializationManager {
     constructor() {
@@ -17,7 +18,8 @@ class InitializationManager {
             userManager: false,
             featureToggleManager: false,
             toolCostsManager: false,
-            mergeManager: false
+            mergeManager: false,
+            multiResourceManager: false  // Issue #134: Multi Resource Manager
         };
     }
 
@@ -95,6 +97,9 @@ class InitializationManager {
 
         // Check for Feature Toggle Manager  
         this.modules.featureToggleManager = !!(window.featureToggleManager || window.FeatureToggleManager);
+
+        // Issue #134: Check for Multi Resource Manager
+        this.modules.multiResourceManager = !!(window.multiResourceManager || window.MultiResourceManager);
 
         const loaded = Object.entries(this.modules)
             .filter(([_, status]) => status)
@@ -595,7 +600,7 @@ class InitializationManager {
                 console.log('✓ Tables rendered');
             }
 
-            // Step8: Render Resource Plan forecast
+            // Step 8: Render Resource Plan forecast
             if (window.renderResourcePlanForecast) {
                 window.renderResourcePlanForecast();
                 console.log('✓ Resource Plan forecast rendered');
@@ -613,25 +618,25 @@ class InitializationManager {
             // Step 10: Initialize New Project Welcome if available
             if (this.modules.newProjectWelcome && typeof window.newProjectWelcome.initialize === 'function') {
                 window.newProjectWelcome.initialize();
-                console.log('✓ Step 9: New Project Welcome initialized');
+                console.log('✓ Step 10: New Project Welcome initialized');
             }
 
             // Step 11: Initialize User Manager
             if (this.modules.userManager && typeof window.userManager.initialize === 'function') {
                 window.userManager.initialize();
-                console.log('✓ Step 10: User Manager initialized');
+                console.log('✓ Step 11: User Manager initialized');
             }
 
             // Step 12: Initialize Feature Toggle Manager
             if (this.modules.featureToggleManager && typeof window.featureToggleManager.initialize === 'function') {
                 window.featureToggleManager.initialize();
-                console.log('✓ Step 11: Feature Toggle Manager initialized');
+                console.log('✓ Step 12: Feature Toggle Manager initialized');
             }
 
             // Step 13: Initialize Currency Manager
             if (this.modules.currencyManager && typeof window.currencyManager.initialize === 'function') {
                 window.currencyManager.initialize();
-                console.log('✓ Step 12: Currency Manager initialized');
+                console.log('✓ Step 13: Currency Manager initialized');
             }
 
             // Step 14: Initialize Tool Costs Manager
@@ -639,36 +644,49 @@ class InitializationManager {
                 try {
                     if (window.toolCostsManager && window.toolCostsManager.initialize) {
                         window.toolCostsManager.initialize();
-                        console.log('✓ Step 12: Tool Costs Manager initialized');
+                        console.log('✓ Step 14: Tool Costs Manager initialized');
                     }
                 } catch (error) {
                     console.error('Error initializing Tool Costs Manager:', error);
                 }
             }
             
-            // Step 15: Initialize Header Dropdowns (NEW)
+            // Step 15: Initialize Header Dropdowns
             this.initializeHeaderDropdowns();
-            console.log('✓ Step 13: Header dropdowns initialized');
+            console.log('✓ Step 15: Header dropdowns initialized');
 
-            // Step 16: Setup User View Navigation (NEW)
+            // Step 16: Setup User View Navigation
             this.setupUserViewNavigation();
-            console.log('✓ Step 14: User view navigation initialized');
+            console.log('✓ Step 16: User view navigation initialized');
 
-            // Step 17: Update User Display in Header (NEW)
+            // Step 17: Update User Display in Header
             this.updateUserDisplayInHeader();
-            console.log('✓ Step 15: User display updated in header');
+            console.log('✓ Step 17: User display updated in header');
 
             // Step 18: Initialize Merge Manager
             if (this.modules.mergeManager && typeof window.mergeManager.initialize === 'function') {
                 window.mergeManager.initialize();
-                console.log('✓ Merge Manager initialized');
+                console.log('✓ Step 18: Merge Manager initialized');
             } else if (this.modules.mergeManager) {
                 console.warn('⚠ Merge Manager loaded but has no initialize method');
             } else {
                 console.log('ℹ Merge Manager not available');
             }
+
+            // Step 19: Initialize Multi Resource Manager (Issue #134)
+            if (this.modules.multiResourceManager) {
+                if (window.multiResourceManager && typeof window.multiResourceManager.initialize === 'function') {
+                    window.multiResourceManager.initialize();
+                    console.log('✓ Step 19: Multi Resource Manager initialized');
+                } else if (window.MultiResourceManager && typeof window.MultiResourceManager.initialize === 'function') {
+                    window.MultiResourceManager.initialize();
+                    console.log('✓ Step 19: Multi Resource Manager initialized');
+                }
+            } else {
+                console.log('ℹ Multi Resource Manager not available');
+            }
             
-            // Step 19: Re-render after short delay for loaded data
+            // Step 20: Re-render after short delay for loaded data
             setTimeout(() => {
                 if (this.modules.tableRenderer) {
                     if (window.TableRenderer && typeof window.TableRenderer.renderAllTables === 'function') {
@@ -680,11 +698,11 @@ class InitializationManager {
                 if (typeof window.updateSummary === 'function') {
                     window.updateSummary();
                 }
-                console.log('✓ Step 16: Final render complete');
+                console.log('✓ Step 20: Final render complete');
             }, 100);
 
             this.initialized = true;
-            console.log('✅ Application initialization complete with dropdown menu support');
+            console.log('✅ Application initialization complete with Multi Resource Manager support');
 
         } catch (error) {
             console.error('❌ Error during initialization:', error);
@@ -698,4 +716,4 @@ class InitializationManager {
 // Create global instance
 window.initManager = new InitializationManager();
 
-console.log('✓ Initialization Manager loaded - v2.0 with Dropdown Menu Support');
+console.log('✓ Initialization Manager loaded - v2.1 with Multi Resource Manager Support');
