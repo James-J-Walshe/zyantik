@@ -1,5 +1,6 @@
 // DOM Manager Module
 // Handles all DOM manipulation, event listeners, and modal management
+// Issue #134: addInternalResource now handled by Multi Resource Manager
 
 class DOMManager {
     constructor() {
@@ -180,8 +181,12 @@ class DOMManager {
     initializeButtonListeners() {
         console.log('Initializing button listeners...');
         
+        // ====================================================================
+        // Issue #134: addInternalResource is now handled by Multi Resource Manager
+        // Removed from this array to prevent duplicate listeners
+        // ====================================================================
         const addButtons = [
-            { id: 'addInternalResource', type: 'internalResource', title: 'Add Internal Resource' },
+            // { id: 'addInternalResource', type: 'internalResource', title: 'Add Internal Resource' }, // Issue #134: Handled by Multi Resource Manager
             { id: 'addVendorCost', type: 'vendorCost', title: 'Add Vendor Cost' },
             { id: 'addToolCost', type: 'toolCost', title: 'Add Tool Cost' },
             { id: 'addMiscCost', type: 'miscCost', title: 'Add Miscellaneous Cost' },
@@ -210,6 +215,9 @@ class DOMManager {
                 console.warn(`Button ${btn.id} not found in DOM`);
             }
         });
+
+        // Issue #134: Log that addInternalResource is handled by Multi Resource Manager
+        console.log('addInternalResource handled by Multi Resource Manager (Issue #134)');
 
         // ====================================================================
         // FIX for Issue #130: Action buttons (Save, Load, Export, etc.) are 
@@ -292,8 +300,83 @@ class DOMManager {
             this.modalFields.innerHTML = this.getModalFields(type);
             this.modal.style.display = 'block';
             this.modalForm.setAttribute('data-type', type);
+            
+            // Handle vendor cost modal - hide standard buttons and attach close handler
+            if (type === 'vendorCost') {
+                // Hide standard modal buttons
+                const standardModalActions = this.modalForm.querySelector('.modal-actions:not(.vendor-cost-actions)');
+                if (standardModalActions) {
+                    standardModalActions.style.display = 'none';
+                }
+                const cancelModal = document.getElementById('cancelModal');
+                const saveModal = this.modalForm.querySelector('button[type="submit"]:not(#vendorCostSave)');
+                if (cancelModal) cancelModal.style.display = 'none';
+                if (saveModal) saveModal.style.display = 'none';
+                
+                // Attach close button handler
+                const closeBtn = document.getElementById('vendorCostClose');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        this.modal.style.display = 'none';
+                        // Restore standard buttons for next modal
+                        this.restoreStandardModalButtons();
+                    });
+                }
+            }
+            
+            // Handle tool cost modal - hide standard buttons and attach close handler
+            if (type === 'toolCost') {
+                // Hide standard modal buttons
+                const standardModalActions = this.modalForm.querySelector('.modal-actions:not(.tool-cost-actions)');
+                if (standardModalActions) {
+                    standardModalActions.style.display = 'none';
+                }
+                const cancelModal = document.getElementById('cancelModal');
+                const saveModal = this.modalForm.querySelector('button[type="submit"]:not(#toolCostSave)');
+                if (cancelModal) cancelModal.style.display = 'none';
+                if (saveModal) saveModal.style.display = 'none';
+                
+                // Attach close button handler
+                const closeBtn = document.getElementById('toolCostClose');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        this.modal.style.display = 'none';
+                        // Restore standard buttons for next modal
+                        this.restoreStandardModalButtons();
+                    });
+                }
+                
+                // Attach ongoing checkbox handler to disable/enable end date
+                const ongoingCheckbox = document.getElementById('isOngoing');
+                const endDateInput = document.getElementById('toolEndDate');
+                if (ongoingCheckbox && endDateInput) {
+                    ongoingCheckbox.addEventListener('change', () => {
+                        endDateInput.disabled = ongoingCheckbox.checked;
+                        if (ongoingCheckbox.checked) {
+                            endDateInput.value = '';
+                            endDateInput.style.backgroundColor = '#f3f4f6';
+                        } else {
+                            endDateInput.style.backgroundColor = '';
+                        }
+                    });
+                }
+            }
         } catch (error) {
             console.error('Error opening modal:', error);
+        }
+    }
+    
+    // Helper function to restore standard modal buttons
+    restoreStandardModalButtons() {
+        if (this.modalForm) {
+            const standardModalActions = this.modalForm.querySelector('.modal-actions');
+            if (standardModalActions) {
+                standardModalActions.style.display = '';
+            }
+            const cancelModal = document.getElementById('cancelModal');
+            const saveModal = this.modalForm.querySelector('button[type="submit"]');
+            if (cancelModal) cancelModal.style.display = '';
+            if (saveModal) saveModal.style.display = '';
         }
     }
 
@@ -330,66 +413,90 @@ class DOMManager {
                 </div>
             `,
             vendorCost: `
-                <div class="form-group">
-                    <label>Vendor:</label>
-                    <input type="text" name="vendor" class="form-control" required>
+                <div class="vendor-cost-container">
+                    <p style="margin-bottom: 1rem; color: #6b7280; font-size: 0.9rem;">
+                        Enter vendor details. You can add monthly cost allocations after saving.
+                    </p>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Vendor Name:</label>
+                        <input type="text" name="vendor" class="form-control" required style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Description:</label>
+                        <input type="text" name="description" class="form-control" required style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Category:</label>
+                        <select name="category" class="form-control" required style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                            <option value="">-- Select Category --</option>
+                            <option value="Implementation">Implementation</option>
+                            <option value="Consulting">Consulting</option>
+                            <option value="Training">Training</option>
+                            <option value="Support">Support</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Description:</label>
-                    <input type="text" name="description" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Category:</label>
-                    <select name="category" class="form-control" required>
-                        <option value="Implementation">Implementation</option>
-                        <option value="Consulting">Consulting</option>
-                        <option value="Training">Training</option>
-                        <option value="Support">Support</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>${months[0]} Cost:</label>
-                    <input type="number" name="month1Cost" class="form-control" min="0" step="0.01" value="0">
-                </div>
-                <div class="form-group">
-                    <label>${months[1]} Cost:</label>
-                    <input type="number" name="month2Cost" class="form-control" min="0" step="0.01" value="0">
-                </div>
-                <div class="form-group">
-                    <label>${months[2]} Cost:</label>
-                    <input type="number" name="month3Cost" class="form-control" min="0" step="0.01" value="0">
-                </div>
-                <div class="form-group">
-                    <label>${months[3]} Cost:</label>
-                    <input type="number" name="month4Cost" class="form-control" min="0" step="0.01" value="0">
+                <div class="vendor-cost-actions" style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
+                    <button type="button" id="vendorCostClose" style="background-color: #6b7280; color: white; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Close</button>
+                    <button type="submit" id="vendorCostSave" style="background-color: #6366f1; color: white; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Save</button>
                 </div>
             `,
             toolCost: `
-                <div class="form-group">
-                    <label>Tool/Software:</label>
-                    <input type="text" name="tool" class="form-control" required>
+                <div class="tool-cost-container" style="max-height: 60vh; overflow-y: auto; padding-right: 0.5rem;">
+                    <p style="margin-bottom: 1rem; color: #6b7280; font-size: 0.9rem;">
+                        Enter tool/software details including billing frequency and duration.
+                    </p>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Procurement Type:</label>
+                        <select name="procurementType" class="form-control" required style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                            <option value="">-- Select Type --</option>
+                            <option value="Software License">Software License</option>
+                            <option value="Hardware">Hardware</option>
+                            <option value="Cloud Services">Cloud Services</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Tool/Software Name:</label>
+                        <input type="text" name="tool" class="form-control" required style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Billing Frequency:</label>
+                        <select name="billingFrequency" class="form-control" id="billingFrequency" required style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                            <option value="">-- Select Frequency --</option>
+                            <option value="one-time">One-time</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="annual">Annual</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Cost Per Period:</label>
+                        <input type="number" name="costPerPeriod" class="form-control" id="costPerPeriod" min="0" step="0.01" required style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                        <small style="color: #6b7280; font-size: 0.8rem;">Enter the cost for one billing period</small>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Quantity (Licenses/Units):</label>
+                        <input type="number" name="quantity" class="form-control" id="quantity" min="1" step="1" value="1" required style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Start Date:</label>
+                        <input type="date" name="startDate" class="form-control" id="toolStartDate" required style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;" id="endDateGroup">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">End Date:</label>
+                        <input type="date" name="endDate" class="form-control" id="toolEndDate" style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" name="isOngoing" id="isOngoing" style="width: auto; margin: 0;">
+                            <span style="font-weight: 500;">Ongoing (no end date)</span>
+                        </label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>License Type:</label>
-                    <select name="licenseType" class="form-control" required>
-                        <option value="Per User">Per User</option>
-                        <option value="Per Device">Per Device</option>
-                        <option value="Enterprise">Enterprise</option>
-                        <option value="One-time">One-time</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Users/Licenses:</label>
-                    <input type="number" name="users" class="form-control" min="1" required>
-                </div>
-                <div class="form-group">
-                    <label>Monthly Cost:</label>
-                    <input type="number" name="monthlyCost" class="form-control" min="0" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label>Duration (Months):</label>
-                    <input type="number" name="duration" class="form-control" min="1" required>
+                <div class="tool-cost-actions" style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
+                    <button type="button" id="toolCostClose" style="background-color: #6b7280; color: white; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Close</button>
+                    <button type="submit" id="toolCostSave" style="background-color: #6366f1; color: white; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Save</button>
                 </div>
             `,
             miscCost: `
