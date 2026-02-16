@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: 'portfolio',
                 label: 'Portfolio Manager',
                 iconSvg: '<path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-1 12H5V8h14v10z"/>',
-                url: 'portfolio.html' // Update with actual URL when available
+                url: '../pt/index.html' // Update with actual URL when available
             }
             // Add more applications as needed:
             // {
