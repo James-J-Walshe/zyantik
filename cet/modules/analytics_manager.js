@@ -4,7 +4,7 @@
 // Version: 1.1.0 - Added tracking prevention handling
 // 
 // SETUP INSTRUCTIONS:
-// 1. Replace 'G-XXXXXXXXXX' with your GA4 Measurement ID
+// 1. Replace 'G-2KD38HBZB2' with your GA4 Measurement ID
 // 2. Add this script to index.html BEFORE init_manager.js
 // 3. Register in init_manager.js (see documentation below)
 //
