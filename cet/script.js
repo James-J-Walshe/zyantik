@@ -1112,7 +1112,7 @@ function openModal(title, type) {
             console.log('Modal form submit listener attached (defensive re-attach in openModal)');
         }
 
-        // Handle vendor cost modal - hide standard buttons and attach close handler
+        // Handle vendor cost modal - hide standard buttons and attach handlers
         if (type === 'vendorCost') {
             // Hide standard modal buttons
             const standardModalActions = modalForm.querySelector('.modal-actions:not(.vendor-cost-actions)');
@@ -1120,10 +1120,18 @@ function openModal(title, type) {
                 standardModalActions.style.display = 'none';
             }
             const cancelModal = document.getElementById('cancelModal');
-            const saveModal = modalForm.querySelector('button[type="submit"]:not(#vendorCostSave)');
+            const saveModal = modalForm.querySelector('button[type="submit"]');
             if (cancelModal) cancelModal.style.display = 'none';
             if (saveModal) saveModal.style.display = 'none';
-            
+
+            // DEF-007: explicit click handler on Save — type="button" prevents native form submit
+            const saveBtn = document.getElementById('vendorCostSave');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', () => {
+                    handleModalSubmit();
+                });
+            }
+
             // Attach close button handler
             const closeBtn = document.getElementById('vendorCostClose');
             if (closeBtn) {
@@ -1213,13 +1221,13 @@ function getModalFields(type) {
                 </div>
                 <div class="form-group" style="margin-bottom: 1rem;">
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Currency:</label>
-                    <select name="currency" id="entryCurrencyVendor" class="form-control currency-selector" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: var(--radius-md);"></select>
+                    <select name="currency" id="entryCurrencyVendor" class="form-control currency-selector" style="width: 100%; padding: 0.5rem; border-radius: var(--radius-md);"></select>
                     <span class="currency-error-msg" style="display:none;"></span>
                 </div>
             </div>
             <div class="vendor-cost-actions" style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
                 <button type="button" id="vendorCostClose" class="btn btn-secondary">Close</button>
-                <button type="submit" id="vendorCostSave" class="btn btn-primary">Save</button>
+                <button type="button" id="vendorCostSave" class="btn btn-primary">Save</button>
             </div>
         `,
         toolCost: `

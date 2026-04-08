@@ -105,6 +105,12 @@
                                     </svg>
                                     <span>Currency Settings</span>
                                 </button>
+                                <button class="dropdown-item" id="aiExtractBtn">
+                                    <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; opacity: 0.6;">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" fill="currentColor"/>
+                                    </svg>
+                                    <span>AI Extraction ✨</span>
+                                </button>
                             </div>
                         </div>
             
@@ -792,6 +798,7 @@
     <!-- Load main script (contains functions but no auto-init) -->
     <script src="script.js"></script>
     
+    <script src="modules/ai_project_extractor.js"></script>
     <!-- Load and run initialization manager LAST -->
     <script src="modules/init_manager.js"></script>
     <script>
