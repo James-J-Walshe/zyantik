@@ -135,22 +135,33 @@ class DOMManager {
         
         const methodRadios = document.querySelectorAll('input[name="contingencyMethod"]');
         
+        const updateSelectedState = (selectedValue) => {
+            methodRadios.forEach(r => {
+                const optionDiv = r.closest('.radio-option');
+                if (optionDiv) {
+                    optionDiv.classList.toggle('selected', r.value === selectedValue);
+                }
+            });
+        };
+
         methodRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
                 if (window.projectData) {
                     window.projectData.contingencyMethod = e.target.value;
                     console.log(`Contingency method changed to: ${e.target.value}`);
-                    
+
+                    updateSelectedState(e.target.value);
+
                     // Toggle percentage input visibility
                     if (window.togglePercentageInput) {
                         window.togglePercentageInput();
                     }
-                    
+
                     // Update calculations and display
                     if (window.updateSummary) {
                         window.updateSummary();
                     }
-                    
+
                     // Save to localStorage
                     if (window.dataManager && window.dataManager.saveToLocalStorage) {
                         window.dataManager.saveToLocalStorage();
@@ -160,16 +171,18 @@ class DOMManager {
                 }
             });
         });
-        
+
         // Set initial state based on projectData
         const currentMethod = window.projectData?.contingencyMethod || 'percentage';
         const radioToCheck = document.getElementById(
             currentMethod === 'percentage' ? 'contingencyMethodPercentage' : 'contingencyMethodRiskBased'
         );
-        
+
         if (radioToCheck) {
             radioToCheck.checked = true;
         }
+
+        updateSelectedState(currentMethod);
         
         // Initialize visibility
         if (window.togglePercentageInput) {
@@ -298,6 +311,10 @@ class DOMManager {
             
             this.modalTitle.textContent = title;
             this.modalFields.innerHTML = this.getModalFields(type);
+            // STR-001: populate currency selectors after modal fields are injected
+            if (window.initCurrencySelectors) {
+                window.initCurrencySelectors(this.modal);
+            }
             this.modal.style.display = 'block';
             this.modalForm.setAttribute('data-type', type);
             
@@ -390,10 +407,17 @@ class DOMManager {
                 <div class="form-group">
                     <label>Role:</label>
                     <select name="role" class="form-control" required>
-                        ${window.projectData?.rateCards?.map(rate => 
+                        ${window.projectData?.rateCards?.map(rate =>
                             `<option value="${rate.role}" data-category="${rate.category}">${rate.role} (${rate.category})</option>`
                         ).join('') || ''}
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="entryCurrencyInternal">Currency:</label>
+                    <select name="currency" id="entryCurrencyInternal" class="form-control currency-selector">
+                        <!-- populated by initCurrencySelectors() -->
+                    </select>
+                    <span class="currency-error-msg" style="display:none;"></span>
                 </div>
                 <div class="form-group">
                     <label>${months[0]} Days:</label>
@@ -436,10 +460,18 @@ class DOMManager {
                             <option value="Other">Other</option>
                         </select>
                     </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Currency:</label>
+                        <select name="currency" id="entryCurrencyVendor" class="form-control currency-selector"
+                                style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: var(--radius-md);">
+                            <!-- populated by initCurrencySelectors() -->
+                        </select>
+                        <span class="currency-error-msg" style="display:none;"></span>
+                    </div>
                 </div>
                 <div class="vendor-cost-actions" style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
-                    <button type="button" id="vendorCostClose" style="background-color: #6b7280; color: white; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Close</button>
-                    <button type="submit" id="vendorCostSave" style="background-color: #6366f1; color: white; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Save</button>
+                    <button type="button" id="vendorCostClose" class="btn btn-secondary">Close</button>
+                    <button type="submit" id="vendorCostSave" class="btn btn-primary">Save</button>
                 </div>
             `,
             toolCost: `
@@ -476,6 +508,14 @@ class DOMManager {
                         <small style="color: #6b7280; font-size: 0.8rem;">Enter the cost for one billing period</small>
                     </div>
                     <div class="form-group" style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Currency:</label>
+                        <select name="currency" id="entryCurrencyTool" class="form-control currency-selector"
+                                style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: var(--radius-md);">
+                            <!-- populated by initCurrencySelectors() -->
+                        </select>
+                        <span class="currency-error-msg" style="display:none;"></span>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
                         <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Quantity (Licenses/Units):</label>
                         <input type="number" name="quantity" class="form-control" id="quantity" min="1" step="1" value="1" required style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
                     </div>
@@ -495,8 +535,8 @@ class DOMManager {
                     </div>
                 </div>
                 <div class="tool-cost-actions" style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
-                    <button type="button" id="toolCostClose" style="background-color: #6b7280; color: white; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Close</button>
-                    <button type="submit" id="toolCostSave" style="background-color: #6366f1; color: white; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Save</button>
+                    <button type="button" id="toolCostClose" class="btn btn-secondary">Close</button>
+                    <button type="submit" id="toolCostSave" class="btn btn-primary">Save</button>
                 </div>
             `,
             miscCost: `

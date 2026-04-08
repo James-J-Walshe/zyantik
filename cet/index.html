@@ -18,11 +18,11 @@
                     <div class="header-left">
                         <!-- Zyantik Logo -->
                         <div class="header-logo">
-                            <img src="images/zyantik-logo.png" alt="Zyantik Logo" style="height: 40px; width: auto;">
+                            <img src="images/zyantik-logo.png" alt="Zyantik Logo" style="height: 18px; width: auto;">
                         </div>
                         
                         <!-- Page Title -->
-                        <h1 class="header-title">Cost Modelling Tool</h1>
+                        <h1 class="header-title">Zyantik Cost Modelling Tool</h1>
                     </div>
                     
                     <!-- Header Controls with Dropdown Menus -->
@@ -356,7 +356,7 @@
                     <div class="table-container">
                         <table class="data-table">
                             <thead>
-                                <tr>
+                                <tr class="month-header-row">
                                     <th>Tool/Software</th>
                                     <th>Type</th>
                                     <th>Billing</th>
@@ -364,6 +364,7 @@
                                     <th>Quantity</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
+                                    <th>Currency</th>
                                     <th>Total Cost</th>
                                     <th>Actions</th>
                                 </tr>
@@ -384,7 +385,7 @@
                     <div class="table-container">
                         <table class="data-table">
                             <thead>
-                                <tr>
+                                <tr class="month-header-row">
                                     <th>Item</th>
                                     <th>Description</th>
                                     <th>Category</th>
@@ -405,7 +406,7 @@
                     
                     <!-- Contingency Method Selection -->
                     <div style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: #4b5563; font-size: 1.1rem;">Calculation Method:</h3>
+                        <p class="section-label">Calculation Method</p>
                         
                         <!-- Radio Buttons (Horizontal Layout) -->
                         <div class="radio-group">
@@ -779,6 +780,7 @@
     <script src="modules/table_fixes.js"></script>
     <script src="modules/new_project_welcome.js"></script>
     <script src="modules/currency_manager.js"></script>
+    <script src="modules/currency_entry_manager.js"></script>
     <!-- <script src="modules/user_manager.js"></script> -->
     <script src="modules/feature_toggle_manager.js"></script>
     <script src="modules/tool_costs_manager.js"></script>

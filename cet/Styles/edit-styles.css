@@ -261,29 +261,33 @@
 
 /* Month Column Headers Enhancement */
 .data-table thead th.month-header {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    color: white;
+    background: var(--bg-subtle);
+    color: var(--zinc-600);
     font-weight: 600;
     text-align: center;
-    font-size: 0.85rem;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 /* Two-row Header Styling */
 .year-header-row th {
-    background: linear-gradient(135deg, #495057 0%, #343a40 100%);
-    color: white;
-    font-weight: 700;
-    text-align: center;
-    border-bottom: 1px solid #dee2e6;
-    font-size: 0.9rem;
-}
-
-.month-header-row th {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    background: var(--brand);
     color: white;
     font-weight: 600;
     text-align: center;
-    font-size: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: var(--text-sm);
+}
+
+.month-header-row th {
+    background: var(--bg-subtle);
+    color: var(--zinc-600);
+    font-weight: 600;
+    text-align: center;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     padding: 8px 4px;
 }
 

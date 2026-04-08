@@ -118,8 +118,26 @@ class NewProjectWelcome {
                         </svg>
                     </div>
                     <div class="option-content">
-                        <h3>Start New Project</h3>
+                        <h3>Start New Project Manually</h3>
                         <p>Begin a fresh project by entering your project information and building your cost estimate from scratch.</p>
+                    </div>
+                    <div class="option-arrow">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9,18 15,12 9,6"></polyline>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="welcome-option welcome-option-ai" id="startWithAI">
+                    <div class="option-icon option-icon-ai">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                        </svg>
+                    </div>
+                    <div class="option-content">
+                        <h3>Start with AI Extraction ✨</h3>
+                        <p>Paste a description, upload a timeline image, or attach a document — let AI propose your project details and resource profile automatically.</p>
                     </div>
                     <div class="option-arrow">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -193,7 +211,7 @@ class NewProjectWelcome {
             .welcome-header {
                 text-align: center;
                 padding: 2.5rem 2rem 1.5rem;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: var(--brand, #0d9488);
                 color: white;
                 border-radius: 16px 16px 0 0;
             }
@@ -239,10 +257,10 @@ class NewProjectWelcome {
             }
             
             .welcome-option:hover {
-                border-color: #667eea;
-                background: #f8faff;
+                border-color: var(--brand, #0d9488);
+                background: var(--brand-light, #f0fdfa);
                 transform: translateY(-2px);
-                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+                box-shadow: 0 4px 15px rgba(13, 148, 136, 0.15);
             }
             
             .welcome-option:active {
@@ -254,7 +272,7 @@ class NewProjectWelcome {
                 width: 64px;
                 height: 64px;
                 border-radius: 12px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: var(--brand, #0d9488);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -291,7 +309,7 @@ class NewProjectWelcome {
             
             .welcome-option:hover .option-arrow {
                 transform: translateX(4px);
-                color: #667eea;
+                color: var(--brand, #0d9488);
             }
             
             .welcome-footer {
@@ -317,6 +335,21 @@ class NewProjectWelcome {
                 color: #374151;
             }
             
+            .welcome-option-ai {
+                border-color: #99f6e4;
+                background: var(--brand-light, #f0fdfa);
+            }
+
+            .welcome-option-ai:hover {
+                border-color: var(--brand, #0d9488);
+                background: var(--brand-light, #f0fdfa);
+                box-shadow: 0 4px 15px rgba(13, 148, 136, 0.15);
+            }
+
+            .option-icon-ai {
+                background: var(--brand-dark, #0f766e);
+            }
+
             /* Mobile responsiveness */
             @media (max-width: 640px) {
                 .welcome-modal-content {
@@ -364,7 +397,7 @@ class NewProjectWelcome {
             });
         }
         
-        // Start new project option
+        // Start new project option (manual)
         const startNewBtn = this.welcomeModal.querySelector('#startNewProject');
         if (startNewBtn) {
             startNewBtn.addEventListener('click', () => {
@@ -372,7 +405,16 @@ class NewProjectWelcome {
                 this.handleStartNewProject();
             });
         }
-        
+
+        // Start with AI option
+        const startAIBtn = this.welcomeModal.querySelector('#startWithAI');
+        if (startAIBtn) {
+            startAIBtn.addEventListener('click', () => {
+                console.log('Start with AI clicked');
+                this.handleStartWithAI();
+            });
+        }
+
         // Skip/close button
         const closeBtn = this.welcomeModal.querySelector('#welcomeCloseBtn');
         if (closeBtn) {
@@ -440,6 +482,31 @@ class NewProjectWelcome {
         } catch (error) {
             console.error('Error handling start new project:', error);
             this.showErrorMessage('Error starting new project. Please try again.');
+        }
+    }
+
+    // Handle starting a new project via AI extraction
+    handleStartWithAI() {
+        try {
+            console.log('Initiating AI-assisted new project flow');
+
+            // Close the welcome modal
+            this.closeWelcomeModal();
+
+            // Clear project data first so AI results populate a clean slate
+            this.clearProjectData();
+
+            // Launch the AI extractor modal
+            if (window.aiProjectExtractor && typeof window.aiProjectExtractor.showModal === 'function') {
+                window.aiProjectExtractor.showModal();
+            } else {
+                console.warn('AI Project Extractor not available — falling back to manual setup');
+                this.triggerStandardSettings();
+            }
+
+        } catch (error) {
+            console.error('Error handling start with AI:', error);
+            this.showErrorMessage('Error launching AI extractor. Please try again.');
         }
     }
 

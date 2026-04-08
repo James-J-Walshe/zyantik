@@ -153,15 +153,15 @@ class MultiResourceManager {
                 </div>
                 
                 <div id="addAnotherContainer" style="margin-top: 1rem;">
-                    <button type="button" class="btn btn-outline" id="addAnotherResource" disabled style="background-color: transparent; color: #6366f1; padding: 0.5rem 1rem; border: 1px solid #6366f1; border-radius: 6px; cursor: pointer; opacity: 0.5;">
+                    <button type="button" class="btn btn-secondary" id="addAnotherResource" disabled style="opacity: 0.5;">
                         + Add Another Role
                     </button>
                 </div>
             </div>
             
             <div class="multi-resource-actions" style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
-                <button type="button" id="multiResourceClose" style="background-color: #6b7280; color: white; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Close</button>
-                <button type="button" id="multiResourceSave" style="background-color: #6366f1; color: white; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Save</button>
+                <button type="button" id="multiResourceClose" class="btn btn-secondary">Close</button>
+                <button type="button" id="multiResourceSave" class="btn btn-primary">Save</button>
             </div>
         `;
     }

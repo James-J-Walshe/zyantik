@@ -51,7 +51,7 @@ class FeatureToggleManager {
                 description: "Enable multi-currency support and exchange rates",
                 enabled: true,
                 restrictions: {
-                    roles: ["admin"],
+                    roles: [],
                     userIds: []
                 }
             },
@@ -300,15 +300,7 @@ class FeatureToggleManager {
                     gap: 1rem;
                     margin-bottom: 2rem;
                 ">
-                    <button onclick="window.featureToggleManager.addNewToggle()" style="
-                        padding: 0.75rem 1.5rem;
-                        background: #4f46e5;
-                        color: white;
-                        border: none;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-weight: 500;
-                    ">+ Add New Feature Toggle</button>
+                    <button onclick="window.featureToggleManager.addNewToggle()" class="btn btn-primary">+ Add New Feature Toggle</button>
                     <button onclick="window.featureToggleManager.saveAllChanges()" style="
                         padding: 0.75rem 1.5rem;
                         background: #10b981;
@@ -398,15 +390,7 @@ class FeatureToggleManager {
                             cursor: pointer;
                             font-size: 0.875rem;
                         ">${toggle.enabled ? 'Disable' : 'Enable'}</button>
-                        <button onclick="window.featureToggleManager.editToggle('${toggle.key}')" style="
-                            padding: 0.5rem 1rem;
-                            background: #4f46e5;
-                            color: white;
-                            border: none;
-                            border-radius: 6px;
-                            cursor: pointer;
-                            font-size: 0.875rem;
-                        ">Edit</button>
+                        <button onclick="window.featureToggleManager.editToggle('${toggle.key}')" class="btn btn-primary" style="font-size: 0.875rem;">Edit</button>
                         <button onclick="window.featureToggleManager.deleteToggle('${toggle.key}')" style="
                             padding: 0.5rem 1rem;
                             background: #dc2626;
@@ -529,26 +513,8 @@ class FeatureToggleManager {
                 </div>
                 
                 <div style="display: flex; gap: 1rem;">
-                    <button onclick="window.featureToggleManager.saveEditToggle('${toggle.key}')" style="
-                        flex: 1;
-                        padding: 0.75rem;
-                        background: #4f46e5;
-                        color: white;
-                        border: none;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-weight: 500;
-                    ">Save Changes</button>
-                    <button onclick="window.featureToggleManager.closeEditModal()" style="
-                        flex: 1;
-                        padding: 0.75rem;
-                        background: #6b7280;
-                        color: white;
-                        border: none;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-weight: 500;
-                    ">Cancel</button>
+                    <button onclick="window.featureToggleManager.saveEditToggle('${toggle.key}')" class="btn btn-primary" style="flex: 1;">Save Changes</button>
+                    <button onclick="window.featureToggleManager.closeEditModal()" class="btn btn-secondary" style="flex: 1;">Cancel</button>
                 </div>
             </div>
         `;
@@ -665,26 +631,8 @@ class FeatureToggleManager {
                 </div>
                 
                 <div style="display: flex; gap: 1rem;">
-                    <button onclick="window.featureToggleManager.saveNewToggle()" style="
-                        flex: 1;
-                        padding: 0.75rem;
-                        background: #4f46e5;
-                        color: white;
-                        border: none;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-weight: 500;
-                    ">Add Feature Toggle</button>
-                    <button onclick="window.featureToggleManager.closeAddModal()" style="
-                        flex: 1;
-                        padding: 0.75rem;
-                        background: #6b7280;
-                        color: white;
-                        border: none;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-weight: 500;
-                    ">Cancel</button>
+                    <button onclick="window.featureToggleManager.saveNewToggle()" class="btn btn-primary" style="flex: 1;">Add Feature Toggle</button>
+                    <button onclick="window.featureToggleManager.closeAddModal()" class="btn btn-secondary" style="flex: 1;">Cancel</button>
                 </div>
             </div>
         `;
@@ -772,7 +720,7 @@ class FeatureToggleManager {
         // Risks tab
         const risksTab = document.querySelector('[data-tab="risks"]');
         if (risksTab) {
-            risksTab.style.display = this.isFeatureEnabled('risk_assessment') ? 'inline-block' : 'none';
+            risksTab.style.display = this.isFeatureEnabled('risk_assessment') ? '' : 'none';
         }
         
         // Update admin button visibility

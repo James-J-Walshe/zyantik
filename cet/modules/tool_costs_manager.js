@@ -31,8 +31,12 @@ class ToolCostsManager {
             
             if (!costPerPeriod || !quantity) return 0;
             
-            // One-time costs
+            // One-time costs - full amount only if start date falls within the project period
             if (billingFrequency === 'one-time') {
+                const projectEndDate = this.getProjectEndDate();
+                if (projectEndDate && startDate && new Date(startDate) > new Date(projectEndDate)) {
+                    return 0;
+                }
                 return costPerPeriod * quantity;
             }
             
@@ -117,10 +121,13 @@ class ToolCostsManager {
             
             if (!costPerPeriod || !quantity || !startDate) return breakdown;
             
-            // One-time costs appear only in start month
+            // One-time costs appear only in start month, but only if within project period
             if (billingFrequency === 'one-time') {
-                const monthKey = this.getMonthKey(new Date(startDate));
-                breakdown[monthKey] = costPerPeriod * quantity;
+                const projectEndDate = this.getProjectEndDate();
+                if (!projectEndDate || new Date(startDate) <= new Date(projectEndDate)) {
+                    const monthKey = this.getMonthKey(new Date(startDate));
+                    breakdown[monthKey] = costPerPeriod * quantity;
+                }
                 return breakdown;
             }
             

@@ -7,6 +7,8 @@
  * 3. Professional tick/cross buttons matching pen/bin styling
  * 4. Proper header structure without inline style conflicts
  * 5. CSS injection to defeat conflicting gradient rules
+ * 
+ * Issue #139: Added optional personName field to Internal Resources
  */
 
 // SOLUTION 1: CSS Override Injection to Force Blue Headers
@@ -19,10 +21,10 @@ function injectForceBlueHeadersCSS() {
     
     // CSS to force the correct colors with !important
     styleElement.textContent = `
-        /* FORCE BLUE YEAR HEADERS - Override any conflicting gradients */
+        /* FORCE TEAL YEAR HEADERS - Override any conflicting gradients */
         .data-table thead tr.year-header-row th {
-            background: #667eea !important;
-            background-color: #667eea !important;
+            background: #0d9488 !important;
+            background-color: #0d9488 !important;
             background-image: none !important;
             color: white !important;
             font-weight: 700 !important;
@@ -31,46 +33,59 @@ function injectForceBlueHeadersCSS() {
             padding: 0.4rem 1rem !important;
             border-bottom: 1px solid rgba(255,255,255,0.3) !important;
         }
-        
-        /* FORCE LIGHT GRAY MONTH HEADERS */
+
+        /* FORCE SUBTLE GRAY MONTH HEADERS */
         .data-table thead tr.month-header-row th {
-            background: #f1f5f9 !important;
-            background-color: #f1f5f9 !important;
+            background: #f4f4f5 !important;
+            background-color: #f4f4f5 !important;
             background-image: none !important;
-            color: #374151 !important;
+            color: #52525b !important;
             font-weight: 600 !important;
             text-align: center !important;
             font-size: 0.8rem !important;
             padding: 0.4rem 0.5rem !important;
-            border-bottom: 2px solid #e5e7eb !important;
+            border-bottom: 2px solid #e4e4e7 !important;
             white-space: nowrap !important;
         }
-        
+
         /* SPECIAL STYLING FOR FIXED COLUMNS IN MONTH HEADER ROW */
         .data-table thead tr.month-header-row th.fixed-column {
-            background: #f8fafc !important;
-            background-color: #f8fafc !important;
+            background: #f4f4f5 !important;
+            background-color: #f4f4f5 !important;
             background-image: none !important;
             font-size: 0.875rem !important;
             font-weight: 600 !important;
             padding: 1rem !important;
             text-align: left !important;
         }
-        
+
         /* ADDITIONAL OVERRIDE: Remove any gradient from year header rows */
         .year-header-row th {
-            background: #667eea !important;
+            background: #0d9488 !important;
             background-image: none !important;
         }
-        
+
         /* ENSURE NO CONFLICTING GRADIENTS */
         thead tr.year-header-row th,
         tr.year-header-row th,
         .year-header-row th {
-            background: #667eea !important;
-            background-color: #667eea !important;
+            background: #0d9488 !important;
+            background-color: #0d9488 !important;
             background-image: none !important;
             color: white !important;
+        }
+
+        /* Issue #139: TBC placeholder styling for unnamed resources */
+        .tbc-label {
+            color: #9ca3af;
+            font-style: italic;
+            font-size: 0.85em;
+        }
+
+        /* Issue #139: Person Name column minimum width */
+        #internalResourcesTable td:nth-child(2),
+        #internalResourcesYearHeader th:nth-child(2) {
+            min-width: 140px;
         }
     `;
     
@@ -143,6 +158,7 @@ function renderTableHeadersCorrectly() {
     };
     
     // Update Internal Resources table headers
+    // Issue #139: Added 'Person Name' as second fixed column
     const internalYearHeader = document.getElementById('internalResourcesYearHeader');
     const internalMonthHeader = document.getElementById('internalResourcesTableHeader');
     
@@ -151,9 +167,10 @@ function renderTableHeadersCorrectly() {
         internalYearHeader.className = 'year-header-row';
         internalMonthHeader.className = 'month-header-row';
         
-        // Build year header row
+        // Build year header row — Issue #139: Person Name added after Role
         let yearRowHTML = `
             <th rowspan="2" class="fixed-column">Role</th>
+            <th rowspan="2" class="fixed-column">Person Name</th>
             <th rowspan="2" class="fixed-column">Rate Card</th>
             <th rowspan="2" class="fixed-column">Daily Rate</th>
         `;
@@ -164,23 +181,24 @@ function renderTableHeadersCorrectly() {
         });
         
         yearRowHTML += `
+            <th rowspan="2" class="fixed-column">Currency</th>
             <th rowspan="2" class="fixed-column">Total Cost</th>
             <th rowspan="2" class="fixed-column">Actions</th>
         `;
-        
+
         // Build month header row (only month names, no fixed columns)
         let monthRowHTML = '';
         monthInfo.months.forEach(month => {
             monthRowHTML += `<th>${month}</th>`;
         });
-        
+
         internalYearHeader.innerHTML = yearRowHTML;
         internalMonthHeader.innerHTML = monthRowHTML;
         
         console.log('Internal Resources headers rendered correctly');
     }
     
-    // Update Vendor Costs table headers
+    // Update Vendor Costs table headers — unchanged by Issue #139
     const vendorYearHeader = document.getElementById('vendorCostsYearHeader');
     const vendorMonthHeader = document.getElementById('vendorCostsTableHeader');
     
@@ -199,53 +217,55 @@ function renderTableHeadersCorrectly() {
         });
         
         yearRowHTML += `
+            <th rowspan="2" class="fixed-column">Currency</th>
             <th rowspan="2" class="fixed-column">Total Cost</th>
             <th rowspan="2" class="fixed-column">Actions</th>
         `;
-        
+
         let monthRowHTML = '';
         monthInfo.months.forEach(month => {
             monthRowHTML += `<th>${month}</th>`;
         });
-        
+
         vendorYearHeader.innerHTML = yearRowHTML;
         vendorMonthHeader.innerHTML = monthRowHTML;
         
         console.log('Vendor Costs headers rendered correctly');
 
-            const forecastYearHeader = document.getElementById('forecastTableYearHeader');
-    const forecastMonthHeader = document.getElementById('forecastTableHeader');
-    
-    if (forecastYearHeader && forecastMonthHeader) {
-        forecastYearHeader.className = 'year-header-row';
-        forecastMonthHeader.className = 'month-header-row';
+        const forecastYearHeader = document.getElementById('forecastTableYearHeader');
+        const forecastMonthHeader = document.getElementById('forecastTableHeader');
         
-        let yearRowHTML = `
-            <th rowspan="2" class="fixed-column">Category</th>
-        `;
-        
-        monthInfo.yearGroups.forEach(yearGroup => {
-            yearRowHTML += `<th colspan="${yearGroup.count}">${yearGroup.year}</th>`;
-        });
-        
-        yearRowHTML += `
-            <th rowspan="2" class="fixed-column">Total</th>
-        `;
-        
-        let monthRowHTML = '';
-        monthInfo.months.forEach(month => {
-            monthRowHTML += `<th>${month}</th>`;
-        });
-        
-        forecastYearHeader.innerHTML = yearRowHTML;
-        forecastMonthHeader.innerHTML = monthRowHTML;
-        
-        console.log('Forecast table headers rendered correctly');
-    }
+        if (forecastYearHeader && forecastMonthHeader) {
+            forecastYearHeader.className = 'year-header-row';
+            forecastMonthHeader.className = 'month-header-row';
+            
+            let yearRowHTML = `
+                <th rowspan="2" class="fixed-column">Category</th>
+            `;
+            
+            monthInfo.yearGroups.forEach(yearGroup => {
+                yearRowHTML += `<th colspan="${yearGroup.count}">${yearGroup.year}</th>`;
+            });
+            
+            yearRowHTML += `
+                <th rowspan="2" class="fixed-column">Total</th>
+            `;
+            
+            let monthRowHTML = '';
+            monthInfo.months.forEach(month => {
+                monthRowHTML += `<th>${month}</th>`;
+            });
+            
+            forecastYearHeader.innerHTML = yearRowHTML;
+            forecastMonthHeader.innerHTML = monthRowHTML;
+            
+            console.log('Forecast table headers rendered correctly');
+        }
     }
 }
 
 // SOLUTION 4: Enhanced rendering with CORRECT CSS and NO inline overrides
+// Issue #139: Added Person Name column (index 1) to Internal Resources rows
 function renderInternalResourcesTableFixed() {
     console.log('Starting renderInternalResourcesTableFixed with CORRECT structure...');
     
@@ -264,7 +284,8 @@ function renderInternalResourcesTableFixed() {
     
     if (!projectData.internalResources || projectData.internalResources.length === 0) {
         const monthInfo = window.tableRenderer ? window.tableRenderer.calculateProjectMonths() : { count: 16 };
-        const colspan = 3 + monthInfo.count + 2;
+        // Issue #139: +1 for Person Name; STR-001: +1 for Currency
+        const colspan = 4 + monthInfo.count + 3;
         tbody.innerHTML = `<tr><td colspan="${colspan}" class="empty-state" style="padding: 2rem; text-align: center; color: #6b7280;">No internal resources added yet</td></tr>`;
         return;
     }
@@ -298,22 +319,39 @@ function renderInternalResourcesTableFixed() {
         });
         
         const totalCost = totalDays * (resource.dailyRate || 0);
-        
+        const primaryCurrency = projectData.currency?.primaryCurrency || '';
+        const isStale = window.isRateStale ? window.isRateStale(resource) : false;
+        const costCellHTML = window.buildCostCellHTML
+            ? window.buildCostCellHTML(resource, totalCost)
+            : `<strong>$${totalCost.toLocaleString()}</strong>`;
+
         const row = document.createElement('tr');
         row.setAttribute('data-id', resource.id);
         row.setAttribute('data-type', 'internal-resource');
-        
+
+        // Issue #139: Person Name cell added as second column (index 1)
+        // Shows name if present, otherwise renders a grey italic TBC placeholder
+        const personNameCell = resource.personName
+            ? resource.personName
+            : '<span class="tbc-label">TBC</span>';
+
+        const editBtnStyle = isStale
+            ? 'background-color: #17a2b8; color: white; border: none; padding: 6px 8px; border-radius: 4px; cursor: not-allowed; margin-right: 4px; opacity: 0.5; pointer-events: none;'
+            : 'background-color: #17a2b8; color: white; border: none; padding: 6px 8px; border-radius: 4px; cursor: pointer; margin-right: 4px;';
+
         // CRITICAL: Remove inline styles - let CSS handle styling
         row.innerHTML = `
             <td>${resource.role || 'Unknown Role'}</td>
+            <td>${personNameCell}</td>
             <td><span class="category-badge category-internal">${resource.rateCard || 'Internal'}</span></td>
             <td style="text-align: right;">$${(resource.dailyRate || 0).toLocaleString()}</td>
             ${monthCells}
-            <td class="cost-total"><strong>$${totalCost.toLocaleString()}</strong></td>
+            <td class="cost-currency">${resource.currency && resource.currency !== primaryCurrency ? resource.currency : (primaryCurrency || '')}</td>
+            <td class="cost-total">${costCellHTML}</td>
             <td class="action-cell">
                 <div class="action-buttons" style="display: flex; gap: 4px; align-items: center; justify-content: center;">
                     <button class="edit-row-btn icon-btn" data-id="${resource.id}" data-type="internal-resource" title="Edit Row" onclick="editWholeRowProfessional(this)"
-                            style="background-color: #17a2b8; color: white; border: none; padding: 6px 8px; border-radius: 4px; cursor: pointer; margin-right: 4px;">
+                            style="${editBtnStyle}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                             <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -323,14 +361,24 @@ function renderInternalResourcesTableFixed() {
                 </div>
             </td>
         `;
-        
+
         tbody.appendChild(row);
+
+        // STR-001: staleness warning sub-row
+        if (isStale) {
+            const staleRow = document.createElement('tr');
+            staleRow.className = 'stale-rate-warning-row';
+            const colspan = 4 + monthInfo.count + 3;
+            staleRow.innerHTML = `<td colspan="${colspan}" class="stale-rate-warning">The exchange rate for ${resource.currency} has been removed. This entry cannot be modified until a rate is reconfigured in Settings.</td>`;
+            tbody.appendChild(staleRow);
+        }
     });
     
     console.log('Internal Resources table rendered with CORRECT CSS');
 }
 
 // SOLUTION 5: Enhanced vendor costs rendering with CORRECT CSS
+// Issue #139: Vendor Costs tab is unchanged — no personName field here
 function renderVendorCostsTableFixed() {
     console.log('Starting renderVendorCostsTableFixed with CORRECT structure...');
     
@@ -345,7 +393,8 @@ function renderVendorCostsTableFixed() {
     const projectData = window.projectData || {};
     if (!projectData.vendorCosts || projectData.vendorCosts.length === 0) {
         const monthInfo = window.tableRenderer ? window.tableRenderer.calculateProjectMonths() : { count: 16 };
-        const colspan = 3 + monthInfo.count + 2;
+        // STR-001: +1 for Currency column
+        const colspan = 3 + monthInfo.count + 3;
         tbody.innerHTML = `<tr><td colspan="${colspan}" class="empty-state" style="padding: 2rem; text-align: center; color: #6b7280;">No vendor costs added yet</td></tr>`;
         return;
     }
@@ -377,20 +426,31 @@ function renderVendorCostsTableFixed() {
             monthCells += `<td class="month-cell" data-field="${fieldName}">$${cost.toLocaleString()}</td>`;
         });
         
+        const primaryCurrency = projectData.currency?.primaryCurrency || '';
+        const isStale = window.isRateStale ? window.isRateStale(vendor) : false;
+        const costCellHTML = window.buildCostCellHTML
+            ? window.buildCostCellHTML(vendor, totalCost)
+            : `<strong>$${totalCost.toLocaleString()}</strong>`;
+
         const row = document.createElement('tr');
         row.setAttribute('data-id', vendor.id);
         row.setAttribute('data-type', 'vendor-cost');
-        
+
+        const editBtnStyle = isStale
+            ? 'background-color: #17a2b8; color: white; border: none; padding: 6px 8px; border-radius: 4px; cursor: not-allowed; margin-right: 4px; opacity: 0.5; pointer-events: none;'
+            : 'background-color: #17a2b8; color: white; border: none; padding: 6px 8px; border-radius: 4px; cursor: pointer; margin-right: 4px;';
+
         row.innerHTML = `
             <td>${vendor.vendor || 'Unknown Vendor'}</td>
             <td><span class="category-badge">${vendor.category || 'Other'}</span></td>
             <td>${vendor.description || 'No description'}</td>
             ${monthCells}
-            <td class="cost-total"><strong>$${totalCost.toLocaleString()}</strong></td>
+            <td class="cost-currency">${vendor.currency && vendor.currency !== primaryCurrency ? vendor.currency : (primaryCurrency || '')}</td>
+            <td class="cost-total">${costCellHTML}</td>
             <td class="action-cell">
                 <div class="action-buttons" style="display: flex; gap: 4px; align-items: center; justify-content: center;">
                     <button class="edit-row-btn icon-btn" data-id="${vendor.id}" data-type="vendor-cost" title="Edit Row" onclick="editWholeRowProfessional(this)"
-                            style="background-color: #17a2b8; color: white; border: none; padding: 6px 8px; border-radius: 4px; cursor: pointer; margin-right: 4px;">
+                            style="${editBtnStyle}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                             <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -400,14 +460,24 @@ function renderVendorCostsTableFixed() {
                 </div>
             </td>
         `;
-        
+
         tbody.appendChild(row);
+
+        // STR-001: staleness warning sub-row
+        if (isStale) {
+            const staleRow = document.createElement('tr');
+            staleRow.className = 'stale-rate-warning-row';
+            const staleColspan = 3 + monthInfo.count + 3;
+            staleRow.innerHTML = `<td colspan="${staleColspan}" class="stale-rate-warning">The exchange rate for ${vendor.currency} has been removed. This entry cannot be modified until a rate is reconfigured in Settings.</td>`;
+            tbody.appendChild(staleRow);
+        }
     });
-    
+
     console.log('Vendor Costs table rendered with CORRECT CSS');
 }
 
 // SOLUTION 6: Professional whole row editing with auto-expanding inputs
+// Issue #139: Added inline editing for personName field on internal-resource rows
 function editWholeRowProfessional(button) {
     const row = button.closest('tr');
     const itemId = button.getAttribute('data-id');
@@ -418,8 +488,35 @@ function editWholeRowProfessional(button) {
     console.log(`Starting professional whole row edit for ${itemType} ${itemId}`);
     
     row.classList.add('editing-row');
+
+    // Issue #139: Make the Person Name cell editable for internal resources
+    // Cell index 1 = Person Name column (Role=0, PersonName=1, RateCard=2, DailyRate=3)
+    if (itemType === 'internal-resource') {
+        const personNameCell = row.cells[1];
+        if (personNameCell) {
+            // If the cell contains the TBC placeholder, treat current value as empty
+            const currentValue = personNameCell.querySelector('.tbc-label')
+                ? ''
+                : personNameCell.textContent.trim();
+
+            // Use individual properties (not cssText) so that position:sticky /
+            // left:Xpx set by applyFrozenColumns() are NOT wiped out.
+            personNameCell.style.backgroundColor = '#fff3cd';
+            personNameCell.style.border = '1px solid #ffc107';
+            personNameCell.style.padding = '8px';
+            personNameCell.style.textAlign = 'left';
+            personNameCell.innerHTML = `
+                <input type="text"
+                       class="row-edit-input person-name-input"
+                       data-field="personName"
+                       value="${currentValue}"
+                       placeholder="Person name (optional)"
+                       style="width:100%;padding:4px;border:1px solid #d1d5db;border-radius:4px;font-size:0.875rem;box-sizing:border-box;">
+            `;
+        }
+    }
     
-    // Store original data
+    // Store original data from month cells
     const originalData = {};
     const monthCells = row.querySelectorAll('.month-cell');
     
@@ -428,7 +525,7 @@ function editWholeRowProfessional(button) {
         originalData[fieldName] = cell.textContent.replace(/[$,]/g, '');
     });
     
-    // Convert cells to auto-expanding inputs
+    // Convert month cells to auto-expanding inputs
     monthCells.forEach((cell, index) => {
         const fieldName = cell.getAttribute('data-field');
         const currentValue = cell.textContent.replace(/[$,]/g, '');
@@ -477,6 +574,9 @@ function editWholeRowProfessional(button) {
 }
 
 // SOLUTION 7: Professional save function
+// Issue #139: Fixed value parsing to handle text fields (personName) alongside numeric fields.
+// Previously parseFloat() was applied to all fields, which would silently coerce
+// a name like "Jane Smith" to 0. Now text inputs are saved as strings.
 function saveWholeRowProfessional(button, itemId, itemType) {
     const row = button.closest('tr');
     console.log(`Saving professional whole row for ${itemType} ${itemId}`);
@@ -500,9 +600,15 @@ function saveWholeRowProfessional(button, itemId, itemType) {
         
         inputs.forEach(input => {
             const fieldName = input.getAttribute('data-field');
-            const newValue = parseFloat(input.value) || 0;
-            const oldValue = item[fieldName] || 0;
-            
+
+            // Issue #139: Determine value type by input type rather than always
+            // using parseFloat — text inputs (e.g. personName) must be saved as strings
+            const isNumeric = input.type === 'number' || input.classList.contains('month-input');
+            const newValue = isNumeric
+                ? (parseFloat(input.value) || 0)
+                : input.value.trim();
+            const oldValue = item[fieldName] ?? '';
+
             if (newValue !== oldValue) {
                 hasChanges = true;
                 item[fieldName] = newValue;
@@ -523,13 +629,16 @@ function saveWholeRowProfessional(button, itemId, itemType) {
         } else if (itemType === 'vendor-cost') {
             renderVendorCostsTableFixed();
         }
-        
+
+        window.tableRenderer?.addTopScrollbars?.();
+        window.tableRenderer?.applyFrozenColumns?.();
+
         updateResourcePlanTabProfessional();
-        
+
         if (window.updateSummary) {
             window.updateSummary();
         }
-        
+
         console.log('Professional row saved successfully');
         
     } catch (error) {
@@ -543,12 +652,15 @@ function saveWholeRowProfessional(button, itemId, itemType) {
 function cancelWholeRowProfessional(button, itemId, itemType) {
     const row = button.closest('tr');
     console.log(`Cancelling professional row edit for ${itemType} ${itemId}`);
-    
+
     if (itemType === 'internal-resource') {
         renderInternalResourcesTableFixed();
     } else if (itemType === 'vendor-cost') {
         renderVendorCostsTableFixed();
     }
+
+    window.tableRenderer?.addTopScrollbars?.();
+    window.tableRenderer?.applyFrozenColumns?.();
 }
 
 // SOLUTION 9: Enhanced resource plan update
@@ -660,16 +772,16 @@ function forceBlueHeadersEverywhere() {
         
         yearHeaders.forEach(header => {
             if (header) {
-                header.style.setProperty('background-color', '#667eea', 'important');
-                header.style.setProperty('background', '#667eea', 'important');
+                header.style.setProperty('background-color', '#0d9488', 'important');
+                header.style.setProperty('background', '#0d9488', 'important');
                 header.style.setProperty('background-image', 'none', 'important');
                 header.style.setProperty('color', 'white', 'important');
-                
-                // Force all th elements within to blue
+
+                // Force all th elements within to teal
                 const thElements = header.querySelectorAll('th');
                 thElements.forEach(th => {
-                    th.style.setProperty('background-color', '#667eea', 'important');
-                    th.style.setProperty('background', '#667eea', 'important');
+                    th.style.setProperty('background-color', '#0d9488', 'important');
+                    th.style.setProperty('background', '#0d9488', 'important');
                     th.style.setProperty('background-image', 'none', 'important');
                     th.style.setProperty('color', 'white', 'important');
                 });
@@ -700,7 +812,10 @@ function applyCompleteProfessionalStylingFixes() {
             // Render tables with ALL fixes
             renderInternalResourcesTableFixed();
             renderVendorCostsTableFixed();
-            
+
+            window.tableRenderer?.addTopScrollbars?.();
+            window.tableRenderer?.applyFrozenColumns?.();
+
             console.log('All table rendering overrides applied successfully');
         } catch (error) {
             console.error('Error applying table rendering overrides:', error);
@@ -731,4 +846,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2000);
 });
 
-console.log('COMPLETE MERGED PROFESSIONAL STYLING fixes loaded - Auto-expanding inputs + Blue headers + Professional buttons + All features combined');
+console.log('COMPLETE MERGED PROFESSIONAL STYLING fixes loaded - Issue #139: personName support added to Internal Resources');

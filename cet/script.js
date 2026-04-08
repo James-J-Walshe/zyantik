@@ -81,6 +81,14 @@ function initializeBasicFunctionality() {
                 if (targetTab === 'summary') {
                     updateSummary();
                 }
+
+                // Refresh top scrollbar and frozen columns when returning to
+                // wide tables — the 2-second table_fixes re-render can leave
+                // the scrollbar width stale until this is explicitly refreshed.
+                if (targetTab === 'internal-resources' || targetTab === 'vendor-costs') {
+                    window.tableRenderer?.addTopScrollbars?.();
+                    window.tableRenderer?.applyFrozenColumns?.();
+                }
             });
         });
         console.log('Tab functionality initialized');
@@ -922,18 +930,18 @@ function renderResourcePlanForecast() {
     months.forEach(month => {
         headerHTML += `<th>${month.label}</th>`;
     });
-    headerHTML += '<th>Total</th></tr>';
+    headerHTML += '<th class="col-total">Total</th></tr>';
     thead.innerHTML = headerHTML;
-    
+
     // Get cost data
     const internalCosts = getInternalResourcesMonthlyCosts(months);
     const vendorCosts = getVendorMonthlyCosts(months);
     const toolCosts = getToolCostsMonthlyCosts(months);
     const miscCosts = getMiscMonthlyCosts(months);
-    
+
     // Build body rows
     let bodyHTML = '';
-    
+
     // Internal Resources row
     bodyHTML += '<tr><td><strong>Internal Resources</strong></td>';
     let internalTotal = 0;
@@ -942,8 +950,8 @@ function renderResourcePlanForecast() {
         internalTotal += cost;
         bodyHTML += `<td>$${cost.toLocaleString()}</td>`;
     });
-    bodyHTML += `<td><strong>$${internalTotal.toLocaleString()}</strong></td></tr>`;
-    
+    bodyHTML += `<td class="col-total"><strong>$${internalTotal.toLocaleString()}</strong></td></tr>`;
+
     // Vendor Costs row
     bodyHTML += '<tr><td><strong>Vendor Costs</strong></td>';
     let vendorTotal = 0;
@@ -952,9 +960,9 @@ function renderResourcePlanForecast() {
         vendorTotal += cost;
         bodyHTML += `<td>$${cost.toLocaleString()}</td>`;
     });
-    bodyHTML += `<td><strong>$${vendorTotal.toLocaleString()}</strong></td></tr>`;
-    
-    // Tool Costs row (NEW)
+    bodyHTML += `<td class="col-total"><strong>$${vendorTotal.toLocaleString()}</strong></td></tr>`;
+
+    // Tool Costs row
     bodyHTML += '<tr><td><strong>Tool Costs</strong></td>';
     let toolTotal = 0;
     months.forEach(month => {
@@ -962,8 +970,8 @@ function renderResourcePlanForecast() {
         toolTotal += cost;
         bodyHTML += `<td>$${cost.toLocaleString()}</td>`;
     });
-    bodyHTML += `<td><strong>$${toolTotal.toLocaleString()}</strong></td></tr>`;
-    
+    bodyHTML += `<td class="col-total"><strong>$${toolTotal.toLocaleString()}</strong></td></tr>`;
+
     // Miscellaneous row
     bodyHTML += '<tr><td><strong>Miscellaneous</strong></td>';
     let miscTotal = 0;
@@ -972,20 +980,20 @@ function renderResourcePlanForecast() {
         miscTotal += cost;
         bodyHTML += `<td>$${cost.toLocaleString()}</td>`;
     });
-    bodyHTML += `<td><strong>$${miscTotal.toLocaleString()}</strong></td></tr>`;
-    
+    bodyHTML += `<td class="col-total"><strong>$${miscTotal.toLocaleString()}</strong></td></tr>`;
+
     // Total row
-    bodyHTML += '<tr class="total-row" style="background: #f0f9ff; font-weight: bold;"><td><strong>Total Monthly Cost</strong></td>';
+    bodyHTML += '<tr class="total-row"><td><strong>Total Monthly Cost</strong></td>';
     let grandTotal = 0;
     months.forEach(month => {
-        const monthTotal = (internalCosts[month.key] || 0) + 
-                          (vendorCosts[month.key] || 0) + 
-                          (toolCosts[month.key] || 0) + 
+        const monthTotal = (internalCosts[month.key] || 0) +
+                          (vendorCosts[month.key] || 0) +
+                          (toolCosts[month.key] || 0) +
                           (miscCosts[month.key] || 0);
         grandTotal += monthTotal;
         bodyHTML += `<td><strong>$${monthTotal.toLocaleString()}</strong></td>`;
     });
-    bodyHTML += `<td><strong>$${grandTotal.toLocaleString()}</strong></td></tr>`;
+    bodyHTML += `<td class="col-total"><strong>$${grandTotal.toLocaleString()}</strong></td></tr>`;
     
     tbody.innerHTML = bodyHTML;
 }
@@ -1090,9 +1098,20 @@ function openModal(title, type) {
 
         modalTitle.textContent = title;
         modalFields.innerHTML = getModalFields(type);
+        if (window.initCurrencySelectors) window.initCurrencySelectors(modal);
         modal.style.display = 'block';
         modalForm.setAttribute('data-type', type);
-        
+
+        // DEF-007: Defensive re-attach of submit listener in case init-time attachment was missed
+        if (!modalForm.hasAttribute('data-submit-listener-attached')) {
+            modalForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                handleModalSubmit();
+            });
+            modalForm.setAttribute('data-submit-listener-attached', 'true');
+            console.log('Modal form submit listener attached (defensive re-attach in openModal)');
+        }
+
         // Handle vendor cost modal - hide standard buttons and attach close handler
         if (type === 'vendorCost') {
             // Hide standard modal buttons
@@ -1147,6 +1166,11 @@ function getModalFields(type) {
                 </select>
             </div>
             <div class="form-group">
+                <label>Currency:</label>
+                <select name="currency" id="entryCurrencyInternal" class="form-control currency-selector"></select>
+                <span class="currency-error-msg" style="display:none;"></span>
+            </div>
+            <div class="form-group">
                 <label>${months[0] || 'Month 1'} Days:</label>
                 <input type="number" name="month1Days" class="form-control" min="0" step="0.5" value="0">
             </div>
@@ -1187,10 +1211,15 @@ function getModalFields(type) {
                         <option value="Other">Other</option>
                     </select>
                 </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Currency:</label>
+                    <select name="currency" id="entryCurrencyVendor" class="form-control currency-selector" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: var(--radius-md);"></select>
+                    <span class="currency-error-msg" style="display:none;"></span>
+                </div>
             </div>
             <div class="vendor-cost-actions" style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
-                <button type="button" id="vendorCostClose" style="background-color: #6b7280; color: white; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Close</button>
-                <button type="submit" id="vendorCostSave" style="background-color: #6366f1; color: white; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Save</button>
+                <button type="button" id="vendorCostClose" class="btn btn-secondary">Close</button>
+                <button type="submit" id="vendorCostSave" class="btn btn-primary">Save</button>
             </div>
         `,
         toolCost: `
@@ -1223,8 +1252,14 @@ function getModalFields(type) {
                 <small class="form-text text-muted">Enter the cost for one billing period</small>
             </div>
             <div class="form-group">
+                <label>Currency:</label>
+                <select name="currency" id="entryCurrencyTool" class="form-control currency-selector"></select>
+                <span class="currency-error-msg" style="display:none;"></span>
+            </div>
+            <div class="form-group">
                 <label>Quantity (Licenses/Units):</label>
                 <input type="number" name="quantity" class="form-control" id="quantity" min="1" step="1" value="1" required>
+                <small class="form-text text-muted">Total cost = Cost per period × Quantity</small>
             </div>
             <div class="form-group">
                 <label>Start Date:</label>
@@ -1326,9 +1361,17 @@ function handleModalSubmit() {
 
         // Add item to appropriate array
         switch(type) {
-            case 'internalResource':
+            case 'internalResource': {
+                // STR-001: currency validation
+                const irCurrencySelector = document.querySelector('#modal .currency-selector');
+                const irErrorEl = irCurrencySelector ? irCurrencySelector.closest('.form-group')?.querySelector('.currency-error-msg') : null;
+                const irCurrency = irCurrencySelector ? irCurrencySelector.value : (projectData.currency?.primaryCurrency || '');
+                if (window.validateCurrencyRate && !window.validateCurrencyRate(irCurrency, irCurrencySelector, irErrorEl)) {
+                    return;
+                }
+                const primaryCurrency = projectData.currency?.primaryCurrency || '';
                 const rate = projectData.rateCards.find(r => r.role === data.role);
-                projectData.internalResources.push({
+                const irEntry = {
                     id: Date.now(),
                     role: data.role,
                     rateCard: rate ? rate.category || 'Internal' : 'Internal',
@@ -1337,9 +1380,25 @@ function handleModalSubmit() {
                     month2Days: parseFloat(data.month2Days) || 0,
                     month3Days: parseFloat(data.month3Days) || 0,
                     month4Days: parseFloat(data.month4Days) || 0
-                });
+                };
+                if (irCurrency && irCurrency !== primaryCurrency && window.currencyManager) {
+                    irEntry.currency = irCurrency;
+                    irEntry.originalDailyRate = irEntry.dailyRate;
+                    irEntry.dailyRate = window.currencyManager.convertCurrency(irEntry.dailyRate, irCurrency, primaryCurrency);
+                    irEntry.originalAmount = irEntry.originalDailyRate;
+                }
+                projectData.internalResources.push(irEntry);
+                window.dataManager.saveToLocalStorage();
                 break;
-            case 'vendorCost':
+            }
+            case 'vendorCost': {
+                // STR-001: currency validation
+                const vcCurrencySelector = document.querySelector('#modal .currency-selector');
+                const vcErrorEl = vcCurrencySelector ? vcCurrencySelector.closest('.form-group')?.querySelector('.currency-error-msg') : null;
+                const vcCurrency = vcCurrencySelector ? vcCurrencySelector.value : (projectData.currency?.primaryCurrency || '');
+                if (window.validateCurrencyRate && !window.validateCurrencyRate(vcCurrency, vcCurrencySelector, vcErrorEl)) {
+                    return;
+                }
                 // Get project month information for setting up 0 costs
                 const vendorMonthInfo = window.tableRenderer?.calculateProjectMonths() || { count: 12 };
                 const newVendor = {
@@ -1352,11 +1411,27 @@ function handleModalSubmit() {
                 for (let i = 1; i <= vendorMonthInfo.count; i++) {
                     newVendor[`month${i}Cost`] = 0;
                 }
+                const vcPrimary = projectData.currency?.primaryCurrency || '';
+                if (vcCurrency && vcCurrency !== vcPrimary) {
+                    newVendor.currency = vcCurrency;
+                    // originalAmount stored as 0 initially — costs are set per-month via edit
+                    newVendor.originalAmount = 0;
+                }
                 projectData.vendorCosts.push(newVendor);
+                window.dataManager.saveToLocalStorage();
                 // Restore standard modal buttons
                 restoreStandardModalButtons();
                 break;
-            case 'toolCost':
+            }
+            case 'toolCost': {
+                // STR-001: currency validation
+                const tcCurrencySelector = document.querySelector('#modal .currency-selector');
+                const tcErrorEl = tcCurrencySelector ? tcCurrencySelector.closest('.form-group')?.querySelector('.currency-error-msg') : null;
+                const tcCurrency = tcCurrencySelector ? tcCurrencySelector.value : (projectData.currency?.primaryCurrency || '');
+                if (window.validateCurrencyRate && !window.validateCurrencyRate(tcCurrency, tcCurrencySelector, tcErrorEl)) {
+                    return;
+                }
+
                 // Validate using tool costs manager
                 if (window.toolCostsManager) {
                     const validation = window.toolCostsManager.validateToolCost(data);
@@ -1365,19 +1440,53 @@ function handleModalSubmit() {
                         return;
                     }
                 }
-                
-                projectData.toolCosts.push({
+
+                // Warn if tool dates extend beyond the project end date
+                {
+                    const projEnd = projectData.projectInfo?.endDate;
+                    if (projEnd && data.startDate) {
+                        const projEndYM  = projEnd.substring(0, 7); // normalise to YYYY-MM
+                        const toolStartYM = data.startDate.substring(0, 7);
+                        const isOngoing = data.isOngoing === 'on';
+                        const toolEndYM = !isOngoing && data.endDate ? data.endDate.substring(0, 7) : null;
+                        const fmtMonth = ym => new Date(ym + '-01').toLocaleDateString('en-GB', { year: 'numeric', month: 'long' });
+                        const fmtDay   = d  => new Date(d).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+
+                        let warningMsg = null;
+                        if (toolStartYM > projEndYM) {
+                            warningMsg = `⚠️ Date Warning\n\nThe tool start date (${fmtDay(data.startDate)}) is after the project end date (${fmtMonth(projEndYM)}).\n\nThis tool will be added but will show $0 in the project totals, as costs outside the project timeline are excluded.\n\nYou may want to adjust the dates before saving.\n\nDo you want to add it anyway?`;
+                        } else if (toolEndYM && toolEndYM > projEndYM) {
+                            warningMsg = `⚠️ Date Warning\n\nThe tool end date (${fmtDay(data.endDate)}) is after the project end date (${fmtMonth(projEndYM)}).\n\nCosts will only be calculated up to the end of the project (${fmtMonth(projEndYM)}). The remaining period will not be included in the project total.\n\nDo you want to continue?`;
+                        }
+
+                        if (warningMsg && !confirm(warningMsg)) {
+                            return;
+                        }
+                    }
+                }
+
+                const tcPrimary = projectData.currency?.primaryCurrency || '';
+                const rawCostPerPeriod = parseFloat(data.costPerPeriod);
+                const tcEntry = {
                     id: Date.now(),
                     tool: data.tool,
                     procurementType: data.procurementType,
                     billingFrequency: data.billingFrequency,
-                    costPerPeriod: parseFloat(data.costPerPeriod),
+                    costPerPeriod: rawCostPerPeriod,
                     quantity: parseInt(data.quantity),
                     startDate: data.startDate,
                     endDate: data.endDate || null,
                     isOngoing: data.isOngoing === 'on' || data.isOngoing === true
-                });
+                };
+                if (tcCurrency && tcCurrency !== tcPrimary && window.currencyManager) {
+                    tcEntry.currency = tcCurrency;
+                    tcEntry.originalAmount = rawCostPerPeriod;
+                    tcEntry.costPerPeriod = window.currencyManager.convertCurrency(rawCostPerPeriod, tcCurrency, tcPrimary);
+                }
+                projectData.toolCosts.push(tcEntry);
+                window.dataManager.saveToLocalStorage();
                 break;
+            }
             case 'miscCost':
                 projectData.miscCosts.push({
                     id: Date.now(),
@@ -1386,6 +1495,7 @@ function handleModalSubmit() {
                     category: data.category,
                     cost: parseFloat(data.cost)
                 });
+                window.dataManager.saveToLocalStorage();
                 break;
             case 'risk':
                 projectData.risks.push({
@@ -1395,6 +1505,7 @@ function handleModalSubmit() {
                     impact: parseInt(data.impact),
                     mitigationCost: parseFloat(data.mitigationCost) || 0
                 });
+                window.dataManager.saveToLocalStorage();
                 break;
             case 'rateCard':
                 console.log('Adding rate card:', data);
@@ -1405,6 +1516,7 @@ function handleModalSubmit() {
                     category: data.category
                 };
                 projectData.rateCards.push(newRateCard);
+                window.dataManager.saveToLocalStorage();
                 break;
         }
 
@@ -1489,7 +1601,6 @@ function togglePercentageInput() {
     const riskBasedContent = document.getElementById('riskBasedContent');
     
     if (method === 'percentage') {
-        // Show percentage input, hide risk content
         if (percentageGroup) {
             percentageGroup.style.display = 'block';
         }
@@ -1498,7 +1609,6 @@ function togglePercentageInput() {
         }
         console.log('Switched to percentage-based view');
     } else {
-        // Hide percentage input, show risk content
         if (percentageGroup) {
             percentageGroup.style.display = 'none';
         }

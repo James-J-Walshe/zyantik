@@ -199,26 +199,8 @@ class UserManager {
                     </select>
                 </div>
                 <div style="display: flex; gap: 1rem;">
-                    <button onclick="window.userManager.handleLogin()" style="
-                        flex: 1;
-                        padding: 0.75rem;
-                        background: #4f46e5;
-                        color: white;
-                        border: none;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-weight: 500;
-                    ">Login</button>
-                    <button onclick="window.userManager.closeLoginModal()" style="
-                        flex: 1;
-                        padding: 0.75rem;
-                        background: #6b7280;
-                        color: white;
-                        border: none;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-weight: 500;
-                    ">Cancel (Guest Mode)</button>
+                    <button onclick="window.userManager.handleLogin()" class="btn btn-primary" style="flex: 1;">Login</button>
+                    <button onclick="window.userManager.closeLoginModal()" class="btn btn-secondary" style="flex: 1;">Cancel (Guest Mode)</button>
                 </div>
                 <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; font-size: 0.875rem; color: #6b7280;">
                     <strong>Demo Users:</strong><br>

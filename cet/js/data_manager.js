@@ -423,8 +423,9 @@ class DataManager {
         }
         
         // Internal Resources
+        // Issue #139: Added Person Name as second column after Role
         csv += '\nINTERNAL RESOURCES\n';
-        csv += `Role,Rate Card,Daily Rate,${months[0]} Days,${months[1]} Days,${months[2]} Days,${months[3]} Days,Total Cost\n`;
+        csv += `Role,Person Name,Rate Card,Daily Rate,${months[0]} Days,${months[1]} Days,${months[2]} Days,${months[3]} Days,Total Cost\n`;
         if (projectData.internalResources) {
             projectData.internalResources.forEach(resource => {
                 const month1Days = resource.month1Days || resource.q1Days || 0;
@@ -432,11 +433,12 @@ class DataManager {
                 const month3Days = resource.month3Days || resource.q3Days || 0;
                 const month4Days = resource.month4Days || resource.q4Days || 0;
                 const totalCost = (month1Days + month2Days + month3Days + month4Days) * resource.dailyRate;
-                csv += `"${resource.role}","${resource.rateCard}",${resource.dailyRate},${month1Days},${month2Days},${month3Days},${month4Days},${totalCost}\n`;
+                // Issue #139: personName included; falls back to 'TBC' if not set
+                csv += `"${resource.role}","${resource.personName || 'TBC'}","${resource.rateCard}",${resource.dailyRate},${month1Days},${month2Days},${month3Days},${month4Days},${totalCost}\n`;
             });
         }
         
-        // Vendor Costs
+        // Vendor Costs — unchanged by Issue #139
         csv += '\nVENDOR COSTS\n';
         csv += `Vendor,Description,Category,${months[0]} Cost,${months[1]} Cost,${months[2]} Cost,${months[3]} Cost,Total Cost\n`;
         if (projectData.vendorCosts) {
