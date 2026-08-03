@@ -859,20 +859,12 @@ function calculateProjectMonths() {
         return ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'];
     }
 
-    const start = new Date(startDate);
-    const months = [];
-    const current = new Date(start);
-
-    // Generate up to 12 months from start date
-    for (let i = 0; i < 12; i++) {
-        months.push(current.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short' 
-        }));
-        current.setMonth(current.getMonth() + 1);
-    }
-
-    return months;
+    // Issue #147: honour the project end date rather than always returning 12
+    // months from the start. calculateProjectMonthsArray already walks
+    // start -> end and falls back to 12 months when no end date is set, so
+    // there is one month-range implementation rather than two that disagree.
+    return calculateProjectMonthsArray(startDate, projectData.projectInfo.endDate)
+        .map(month => month.label);
 }
 
 // Update all month headers
@@ -1002,17 +994,28 @@ function renderResourcePlanForecast() {
 function calculateProjectMonthsArray(startDate, endDate) {
     const months = [];
     const start = new Date(startDate);
+    if (isNaN(start.getTime())) {
+        return months;
+    }
+
+    // Issue #147: step from the first of the month. setMonth() on a day-29/30/31
+    // date overflows (31 Jan + 1 month lands on 2 or 3 Mar), which would skip a
+    // month for any project starting late in the month.
+    let current = new Date(start.getFullYear(), start.getMonth(), 1);
     let end;
-    
+
     if (endDate) {
-        end = new Date(endDate);
+        const parsedEnd = new Date(endDate);
+        if (isNaN(parsedEnd.getTime())) {
+            return months;
+        }
+        end = new Date(parsedEnd.getFullYear(), parsedEnd.getMonth(), 1);
     } else {
         // Default to 12 months if no end date
-        end = new Date(start);
+        end = new Date(current);
         end.setMonth(end.getMonth() + 11);
     }
-    
-    let current = new Date(start);
+
     while (current <= end) {
         const key = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`;
         const label = current.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
@@ -1649,9 +1652,17 @@ function updateSummary() {
         if (totalInternalCostEl) totalInternalCostEl.textContent = `${internalTotal.toLocaleString()}`;
         if (totalExternalCostEl) totalExternalCostEl.textContent = `${(vendorTotal + toolTotal + miscTotal).toLocaleString()}`;
 
+        // Issue #148: the markup ships these values as "$0" but updateSummary
+        // overwrote textContent with a bare number, stripping the symbol. Use the
+        // project's primary currency rather than assuming dollars.
+        const primaryCurrency = projectData.currency?.primaryCurrency || 'USD';
+        const currencySymbol = window.currencyManager
+            ? window.currencyManager.getCurrencySymbol(primaryCurrency)
+            : '$';
+
         // Update contingency display
         const contingencyAmountEl = document.getElementById('contingencyAmount');
-        if (contingencyAmountEl) contingencyAmountEl.textContent = contingency.toLocaleString();
+        if (contingencyAmountEl) contingencyAmountEl.textContent = `${currencySymbol}${contingency.toLocaleString()}`;
         
         // ADDED for Issue #129: Update contingency method label
         updateContingencyMethodLabel();
@@ -1670,7 +1681,7 @@ function updateSummary() {
         Object.keys(summaryElements).forEach(id => {
             const element = document.getElementById(id);
             if (element) {
-                element.textContent = `${summaryElements[id].toLocaleString()}`;
+                element.textContent = `${currencySymbol}${summaryElements[id].toLocaleString()}`;
             }
         });
 
@@ -1682,24 +1693,49 @@ function updateSummary() {
 }
 
 function calculateInternalResourcesTotal() {
+    // Issue #145: previously summed month1Days..month4Days only, so any project
+    // longer than four months had its cost understated on the Summary tab while
+    // the Resource Plan tab (which uses the dynamic calculation) disagreed.
     return projectData.internalResources.reduce((total, resource) => {
-        const month1Days = resource.month1Days || 0;
-        const month2Days = resource.month2Days || 0;
-        const month3Days = resource.month3Days || 0;
-        const month4Days = resource.month4Days || 0;
+        let totalDays = 0;
 
-        return total + ((month1Days + month2Days + month3Days + month4Days) * resource.dailyRate);
+        // Sum all monthNDays keys dynamically (no hardcoded 4-month limit)
+        for (const key in resource) {
+            if (/^month\d+Days$/.test(key)) {
+                totalDays += resource[key] || 0;
+            }
+        }
+
+        // Fall back to the legacy quarterly fields for older saved projects
+        if (totalDays === 0) {
+            totalDays = (resource.q1Days || 0) + (resource.q2Days || 0) +
+                        (resource.q3Days || 0) + (resource.q4Days || 0);
+        }
+
+        return total + (totalDays * (resource.dailyRate || 0));
     }, 0);
 }
 
 function calculateVendorCostsTotal() {
+    // Issue #145 / DEF-011: previously summed month1Cost..month4Cost only. Matches
+    // the implementation already on develop, so the two codebases converge.
+    // Conversion is a no-op when a vendor has no entry currency recorded.
+    const primaryCurrency = projectData.currency?.primaryCurrency || '';
     return projectData.vendorCosts.reduce((total, vendor) => {
-        const month1Cost = vendor.month1Cost || 0;
-        const month2Cost = vendor.month2Cost || 0;
-        const month3Cost = vendor.month3Cost || 0;
-        const month4Cost = vendor.month4Cost || 0;
-
-        return total + (month1Cost + month2Cost + month3Cost + month4Cost);
+        const vendorCurr = vendor.currency;
+        const needsConversion = vendorCurr && vendorCurr !== primaryCurrency && window.currencyManager;
+        let vendorTotal = 0;
+        // Sum all monthNCost keys dynamically (no hardcoded 4-month limit)
+        for (const key in vendor) {
+            if (/^month\d+Cost$/.test(key)) {
+                let cost = vendor[key] || 0;
+                if (needsConversion) {
+                    cost = window.currencyManager.convertCurrency(cost, vendorCurr, primaryCurrency);
+                }
+                vendorTotal += cost;
+            }
+        }
+        return total + vendorTotal;
     }, 0);
 }
 

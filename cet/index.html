@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Estimating Tool</title>
+    <!-- Issue #6: explicit icon links; without these the browser requests
+         /favicon.ico on every page load and logs a 404. Absolute paths so
+         /cet/ and /pt/ resolve to the same site-root icon. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/assets/zyantik-logo.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="Styles/edit-styles.css">
     <link rel="stylesheet" href="Styles/hover-widget.css">
@@ -435,7 +440,7 @@
                         <!-- Contingency Amount Display (Always Visible, Below Inputs) -->
                         <div class="contingency-display" style="margin-top: 1rem; padding: 1.5rem; background-color: #f0fdf4; border-radius: 8px; border: 1px solid #d1fae5;">
                             <h3 style="color: #059669; font-size: 1rem; margin-bottom: 0.5rem; font-weight: 600;">
-                                Contingency Amount: $<span id="contingencyAmount">0</span>
+                                Contingency Amount: <span id="contingencyAmount">$0</span>
                             </h3>
                             <p style="color: #6b7280; font-size: 0.75rem; margin: 0;">
                                 <span id="contingencyMethodLabel">Calculated using: Percentage-based method (10%)</span>

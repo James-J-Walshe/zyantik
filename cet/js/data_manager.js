@@ -422,33 +422,44 @@ class DataManager {
             });
         }
         
+        // Issue #146: the export previously emitted a fixed four month columns and
+        // totalled only those, so months 5+ were silently dropped from the file.
+        // Both the header and the totals now follow the project's real month span.
+        const monthCount = months.length;
+        const monthDayHeaders = months.map(label => `${label} Days`).join(',');
+        const monthCostHeaders = months.map(label => `${label} Cost`).join(',');
+
         // Internal Resources
         // Issue #139: Added Person Name as second column after Role
         csv += '\nINTERNAL RESOURCES\n';
-        csv += `Role,Person Name,Rate Card,Daily Rate,${months[0]} Days,${months[1]} Days,${months[2]} Days,${months[3]} Days,Total Cost\n`;
+        csv += `Role,Person Name,Rate Card,Daily Rate,${monthDayHeaders},Total Cost\n`;
         if (projectData.internalResources) {
             projectData.internalResources.forEach(resource => {
-                const month1Days = resource.month1Days || resource.q1Days || 0;
-                const month2Days = resource.month2Days || resource.q2Days || 0;
-                const month3Days = resource.month3Days || resource.q3Days || 0;
-                const month4Days = resource.month4Days || resource.q4Days || 0;
-                const totalCost = (month1Days + month2Days + month3Days + month4Days) * resource.dailyRate;
+                const monthDays = [];
+                for (let i = 1; i <= monthCount; i++) {
+                    // Legacy projects stored quarters; fall back for the first four columns only
+                    const legacy = i <= 4 ? (resource[`q${i}Days`] || 0) : 0;
+                    monthDays.push(resource[`month${i}Days`] || legacy);
+                }
+                const totalDays = monthDays.reduce((sum, days) => sum + days, 0);
+                const totalCost = totalDays * (resource.dailyRate || 0);
                 // Issue #139: personName included; falls back to 'TBC' if not set
-                csv += `"${resource.role}","${resource.personName || 'TBC'}","${resource.rateCard}",${resource.dailyRate},${month1Days},${month2Days},${month3Days},${month4Days},${totalCost}\n`;
+                csv += `"${resource.role}","${resource.personName || 'TBC'}","${resource.rateCard}",${resource.dailyRate},${monthDays.join(',')},${totalCost}\n`;
             });
         }
-        
+
         // Vendor Costs — unchanged by Issue #139
         csv += '\nVENDOR COSTS\n';
-        csv += `Vendor,Description,Category,${months[0]} Cost,${months[1]} Cost,${months[2]} Cost,${months[3]} Cost,Total Cost\n`;
+        csv += `Vendor,Description,Category,${monthCostHeaders},Total Cost\n`;
         if (projectData.vendorCosts) {
             projectData.vendorCosts.forEach(vendor => {
-                const month1Cost = vendor.month1Cost || vendor.q1Cost || 0;
-                const month2Cost = vendor.month2Cost || vendor.q2Cost || 0;
-                const month3Cost = vendor.month3Cost || vendor.q3Cost || 0;
-                const month4Cost = vendor.month4Cost || vendor.q4Cost || 0;
-                const totalCost = month1Cost + month2Cost + month3Cost + month4Cost;
-                csv += `"${vendor.vendor}","${vendor.description}","${vendor.category}",${month1Cost},${month2Cost},${month3Cost},${month4Cost},${totalCost}\n`;
+                const monthCosts = [];
+                for (let i = 1; i <= monthCount; i++) {
+                    const legacy = i <= 4 ? (vendor[`q${i}Cost`] || 0) : 0;
+                    monthCosts.push(vendor[`month${i}Cost`] || legacy);
+                }
+                const totalCost = monthCosts.reduce((sum, cost) => sum + cost, 0);
+                csv += `"${vendor.vendor}","${vendor.description}","${vendor.category}",${monthCosts.join(',')},${totalCost}\n`;
             });
         }
         
