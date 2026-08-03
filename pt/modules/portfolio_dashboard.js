@@ -176,6 +176,93 @@ class PortfolioDashboard {
     /**
      * Render timeline chart (monthly costs over time)
      */
+    /**
+     * Pick round axis values ("nice numbers") instead of fractions of the max.
+     *
+     * The step is snapped to 1, 2, 2.5 or 5 x a power of ten, so a portfolio
+     * peaking at 416,985 gets ticks every 100,000 and one peaking at 2.3M gets
+     * ticks every 500,000 — rather than the previous max / max-over-2 / 0.
+     *
+     * @param {number} maxValue - largest value that must fit on the axis
+     * @param {number} targetTicks - roughly how many intervals to aim for
+     * @returns {{axisMax: number, step: number, ticks: number[]}}
+     */
+    niceScale(maxValue, targetTicks = 5) {
+        if (!isFinite(maxValue) || maxValue <= 0) {
+            return { axisMax: 0, step: 0, ticks: [0] };
+        }
+
+        const rawStep = maxValue / targetTicks;
+        const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+        const normalised = rawStep / magnitude;
+
+        let niceNormalised;
+        if (normalised <= 1) niceNormalised = 1;
+        else if (normalised <= 2) niceNormalised = 2;
+        else if (normalised <= 2.5) niceNormalised = 2.5;
+        else if (normalised <= 5) niceNormalised = 5;
+        else niceNormalised = 10;
+
+        const step = niceNormalised * magnitude;
+        const axisMax = Math.ceil(maxValue / step) * step;
+
+        const ticks = [];
+        for (let value = 0; value <= axisMax + step / 2; value += step) {
+            ticks.push(Math.round(value * 1e6) / 1e6);
+        }
+
+        return { axisMax, step, ticks };
+    }
+
+    /**
+     * Compact axis tick label. One unit is chosen from the axis maximum so the
+     * whole axis reads consistently ($0 / $100k / $200k), never a mix.
+     *
+     * The label must state the tick exactly: a 250,000 step shown as "$0.3M"
+     * would misreport it, so the number of decimals is the fewest that
+     * represents the value without rounding, and thousands are only abbreviated
+     * once the axis is large enough for whole-ish values.
+     */
+    formatAxisTick(value, axisMax) {
+        if (value === 0) return '$0';
+
+        const units = [
+            { divisor: 1000000, suffix: 'M', minAxis: 1000000 },
+            { divisor: 1000, suffix: 'k', minAxis: 10000 },
+            { divisor: 1, suffix: '', minAxis: 0 }
+        ];
+        const unit = units.find(u => axisMax >= u.minAxis) || units[units.length - 1];
+
+        if (unit.divisor === 1) {
+            return `$${Math.round(value).toLocaleString()}`;
+        }
+
+        const scaled = value / unit.divisor;
+        let decimals = 0;
+        while (decimals < 2 && Math.abs(scaled - Number(scaled.toFixed(decimals))) > 1e-9) {
+            decimals++;
+        }
+
+        return `$${scaled.toFixed(decimals)}${unit.suffix}`;
+    }
+
+    /**
+     * Stable colour slot for a project.
+     *
+     * Slots are handed out first-come and never reassigned, so removing one
+     * project does not repaint the others — colour follows the project, not its
+     * position in the current list.
+     */
+    getProjectColorSlot(projectId) {
+        if (!this._projectColorSlots) {
+            this._projectColorSlots = new Map();
+        }
+        if (!this._projectColorSlots.has(projectId)) {
+            this._projectColorSlots.set(projectId, this._projectColorSlots.size);
+        }
+        return this._projectColorSlots.get(projectId);
+    }
+
     renderTimelineChart(projects) {
         const container = document.getElementById('costTrendChart');
         if (!container) return;
@@ -190,35 +277,97 @@ class PortfolioDashboard {
             return;
         }
 
-        const maxCost = Math.max(...monthlyCosts.totals);
+        const maxCost = Math.max(...monthlyCosts.totals, 0);
+        const scale = this.niceScale(maxCost);
+        const axisMax = scale.axisMax || 1;
+        const peakIndex = monthlyCosts.totals.indexOf(maxCost);
 
-        const html = `
+        // Series capped at 8 distinct colours; anything beyond folds into "Other"
+        const MAX_SERIES = 8;
+        const seriesFor = (entry) => {
+            const slot = this.getProjectColorSlot(entry.id);
+            return slot < MAX_SERIES
+                ? { slot, name: entry.name }
+                : { slot: -1, name: 'Other' };
+        };
+
+        // Legend entries, in slot order, for every project appearing in the range
+        const legend = new Map();
+        monthlyCosts.timeline.forEach(month => {
+            (monthlyCosts.breakdown[month.key].projects || []).forEach(entry => {
+                const series = seriesFor(entry);
+                if (!legend.has(series.name)) {
+                    legend.set(series.name, series.slot);
+                }
+            });
+        });
+
+        const gridHtml = scale.ticks.map(tick => {
+            const bottom = (tick / axisMax) * 100;
+            return `
+                <div class="tl-gridline" style="bottom: ${bottom.toFixed(4)}%;">
+                    <span class="tl-tick">${this.formatAxisTick(tick, axisMax)}</span>
+                </div>
+            `;
+        }).join('');
+
+        const barsHtml = monthlyCosts.timeline.map((month, index) => {
+            const monthData = monthlyCosts.breakdown[month.key];
+            const total = monthlyCosts.totals[index];
+            const stackHeight = (total / axisMax) * 100;
+            const contributors = monthData.projects || [];
+
+            // Segments are emitted bottom-up; the stack is column-reverse
+            const segments = contributors.map(entry => {
+                const series = seriesFor(entry);
+                const share = total > 0 ? (entry.cost / total) * 100 : 0;
+                const colorVar = series.slot < 0
+                    ? 'var(--series-other)'
+                    : `var(--series-${series.slot + 1})`;
+                const label = `${month.label} · ${series.name}: ${calc.formatCurrency(entry.cost)}`;
+                return `<div class="tl-seg" style="height: ${share.toFixed(4)}%; background: ${colorVar};" title="${this.escapeHtml(label)}"></div>`;
+            }).join('');
+
+            // Direct-label only the peak month; the gridlines carry the rest
+            const peakLabel = (index === peakIndex && total > 0)
+                ? `<div class="tl-peak">${calc.formatCurrency(total)}</div>`
+                : '';
+
+            return `
+                <div class="tl-col">
+                    ${peakLabel}
+                    <div class="tl-stack" style="height: ${stackHeight.toFixed(4)}%;"
+                         title="${this.escapeHtml(`${month.label} total: ${calc.formatCurrency(total)}`)}">
+                        ${segments}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        const xAxisHtml = monthlyCosts.timeline
+            .map(month => `<div class="tl-xlabel"><span>${this.escapeHtml(month.label)}</span></div>`)
+            .join('');
+
+        const legendHtml = [...legend.entries()].map(([name, slot]) => {
+            const colorVar = slot < 0 ? 'var(--series-other)' : `var(--series-${slot + 1})`;
+            return `
+                <div class="tl-legend-item">
+                    <span class="tl-swatch" style="background: ${colorVar};"></span>
+                    <span class="tl-legend-label">${this.escapeHtml(name)}</span>
+                </div>
+            `;
+        }).join('');
+
+        container.innerHTML = `
             <div class="timeline-chart">
-                <div class="timeline-chart-bars">
-                    ${monthlyCosts.months.map((month, index) => {
-                        const cost = monthlyCosts.totals[index];
-                        const height = maxCost > 0 ? (cost / maxCost) * 100 : 0;
-                        return `
-                            <div class="timeline-bar-column">
-                                <div class="timeline-bar-container">
-                                    <div class="timeline-bar" style="height: ${height}%;" 
-                                         title="${month}: ${calc.formatCurrency(cost)}">
-                                    </div>
-                                </div>
-                                <div class="timeline-label">${month}</div>
-                            </div>
-                        `;
-                    }).join('')}
+                <div class="tl-plot">
+                    <div class="tl-gridlines">${gridHtml}</div>
+                    <div class="tl-bars">${barsHtml}</div>
                 </div>
-                <div class="timeline-y-axis">
-                    <div class="y-axis-label">${calc.formatCurrency(maxCost)}</div>
-                    <div class="y-axis-label">${calc.formatCurrency(maxCost / 2)}</div>
-                    <div class="y-axis-label">$0</div>
-                </div>
+                <div class="tl-xaxis">${xAxisHtml}</div>
+                ${legend.size > 1 ? `<div class="tl-legend">${legendHtml}</div>` : ''}
             </div>
         `;
-
-        container.innerHTML = html;
     }
 
     /**
