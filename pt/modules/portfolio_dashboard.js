@@ -365,15 +365,39 @@ class PortfolioDashboard {
             `;
         });
 
-        // Add totals row
+        // Issue #4: this row previously showed the contingency-inclusive total
+        // above contingency-exclusive columns, so it reconciled in neither
+        // direction — the category columns summed to the subtotal, not the
+        // stated total, and neither did the monthly rows above it.
+        // Contingency is a project-level figure with no monthly breakdown, so it
+        // is shown as its own row rather than invented per month.
         const breakdown = calc.getCostBreakdown(projects);
+        const subtotal = breakdown.internal + breakdown.external + breakdown.tools + breakdown.misc;
         html += `
-                <tr class="total-row">
-                    <td class="fixed-column"><strong>TOTAL</strong></td>
+                <tr class="subtotal-row">
+                    <td class="fixed-column"><strong>SUBTOTAL</strong></td>
                     <td class="text-right"><strong>${calc.formatCurrency(breakdown.internal)}</strong></td>
                     <td class="text-right"><strong>${calc.formatCurrency(breakdown.external)}</strong></td>
                     <td class="text-right"><strong>${calc.formatCurrency(breakdown.tools)}</strong></td>
                     <td class="text-right"><strong>${calc.formatCurrency(breakdown.misc)}</strong></td>
+                    <td class="text-right"><strong>${calc.formatCurrency(subtotal)}</strong></td>
+                    <td></td>
+                </tr>
+                <tr class="contingency-row">
+                    <td class="fixed-column">Contingency</td>
+                    <td class="text-right">-</td>
+                    <td class="text-right">-</td>
+                    <td class="text-right">-</td>
+                    <td class="text-right">-</td>
+                    <td class="text-right">${calc.formatCurrency(breakdown.contingency)}</td>
+                    <td></td>
+                </tr>
+                <tr class="total-row">
+                    <td class="fixed-column"><strong>TOTAL</strong></td>
+                    <td class="text-right">-</td>
+                    <td class="text-right">-</td>
+                    <td class="text-right">-</td>
+                    <td class="text-right">-</td>
                     <td class="text-right"><strong>${calc.formatCurrency(breakdown.total)}</strong></td>
                     <td></td>
                 </tr>
@@ -443,16 +467,26 @@ class PortfolioDashboard {
         });
 
         // Add totals row
+        // Issue #5: duration was summed across projects, so two 6-month projects
+        // running partly in parallel reported 12 months for a portfolio that
+        // actually spans 8 calendar months — and Cost/Month, derived from that
+        // inflated figure, was understated by the same proportion. Use the real
+        // portfolio span (earliest start -> latest end), which is exactly what
+        // the monthly timeline already walks and what the Dashboard reports as
+        // its Timeline Range.
         const breakdown = calc.getCostBreakdown(projects);
-        const totalDuration = comparison.reduce((sum, p) => sum + p.comparison.duration, 0);
-        const avgCostPerMonth = totalDuration > 0 ? breakdown.total / totalDuration : 0;
+        const portfolioTimeline = calc.calculateMonthlyCosts(projects);
+        const portfolioMonths = portfolioTimeline && portfolioTimeline.timeline
+            ? portfolioTimeline.timeline.length
+            : 0;
+        const avgCostPerMonth = portfolioMonths > 0 ? breakdown.total / portfolioMonths : 0;
         const totalResources = comparison.reduce((sum, p) => sum + p.comparison.resourceCount, 0);
 
         html += `
                 <tr class="total-row">
                     <td class="fixed-column"><strong>TOTAL</strong></td>
                     <td></td>
-                    <td class="text-center"><strong>${totalDuration}</strong></td>
+                    <td class="text-center"><strong>${portfolioMonths}</strong></td>
                     <td class="text-right"><strong>${calc.formatCurrency(breakdown.total)}</strong></td>
                     <td class="text-right"><strong>${calc.formatCurrency(avgCostPerMonth)}</strong></td>
                     <td class="text-right"><strong>${calc.formatCurrency(breakdown.internal)}</strong></td>
