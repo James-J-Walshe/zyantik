@@ -231,7 +231,7 @@ class PortfolioDashboard {
         if (!projects || projects.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
-                    <svg viewBox="0 0 24 24" style="width: 48px; height: 48px; color: #9CA3AF; margin-bottom: 1rem;">
+                    <svg viewBox="0 0 24 24" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 1rem;">
                         <path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z" fill="currentColor"/>
                     </svg>
                     <p>No projects loaded yet. Upload project files to get started.</p>

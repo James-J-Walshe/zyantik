@@ -15,7 +15,7 @@
 
 .upload-card {
     background: white;
-    border: 2px dashed #d1d5db;
+    border: 2px dashed var(--border-strong);
     border-radius: 12px;
     padding: 3rem;
     text-align: center;
@@ -25,18 +25,18 @@
 }
 
 .upload-card:hover {
-    border-color: #4f46e5;
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+    border-color: var(--brand);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.1);
 }
 
 .upload-card h2 {
     margin: 0 0 0.5rem 0;
-    color: #1f2937;
+    color: var(--text-primary);
     font-size: 1.5rem;
 }
 
 .upload-card p {
-    color: #6b7280;
+    color: var(--text-secondary);
     margin-bottom: 2rem;
 }
 
@@ -54,22 +54,22 @@
 }
 
 .upload-status.success {
-    background-color: #ecfdf5;
-    color: #059669;
-    border: 1px solid #a7f3d0;
+    background-color: var(--success-bg);
+    color: var(--success);
+    border: 1px solid var(--success-border);
 }
 
 .upload-status.error {
-    background-color: #fef2f2;
-    color: #dc2626;
-    border: 1px solid #fecaca;
+    background-color: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid var(--danger-border);
     white-space: pre-wrap;
 }
 
 .upload-status.info {
-    background-color: #eff6ff;
-    color: #2563eb;
-    border: 1px solid #bfdbfe;
+    background-color: var(--info-bg);
+    color: var(--info);
+    border: 1px solid var(--info-border);
 }
 
 /* Portfolio Dashboard */
@@ -111,14 +111,14 @@
 
 .summary-label {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--text-secondary);
     margin-bottom: 0.25rem;
 }
 
 .summary-value {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #1f2937;
+    color: var(--text-primary);
 }
 
 /* Dashboard Sections */
@@ -132,7 +132,7 @@
 
 .dashboard-section h3 {
     margin: 0 0 1.5rem 0;
-    color: #374151;
+    color: var(--text-primary);
     font-size: 1.125rem;
     font-weight: 600;
 }
@@ -158,14 +158,14 @@
 .bar-label {
     min-width: 200px;
     font-weight: 500;
-    color: #374151;
+    color: var(--text-primary);
     font-size: 0.875rem;
 }
 
 .bar-container {
     flex: 1;
     height: 32px;
-    background-color: #f3f4f6;
+    background-color: var(--bg-subtle);
     border-radius: 4px;
     position: relative;
     overflow: hidden;
@@ -173,7 +173,7 @@
 
 .bar-fill {
     height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -220,20 +220,20 @@
 
 .timeline-bar {
     width: 100%;
-    background: linear-gradient(180deg, #667eea 0%, #4f46e5 100%);
+    background: linear-gradient(180deg, var(--brand) 0%, var(--brand-dark) 100%);
     border-radius: 4px 4px 0 0;
     transition: height 0.3s ease;
     cursor: pointer;
 }
 
 .timeline-bar:hover {
-    background: linear-gradient(180deg, #764ba2 0%, #667eea 100%);
+    background: linear-gradient(180deg, var(--brand-dark) 0%, var(--brand) 100%);
 }
 
 .timeline-label {
     margin-top: 0.5rem;
     font-size: 0.75rem;
-    color: #6b7280;
+    color: var(--text-secondary);
     writing-mode: vertical-rl;
     text-orientation: mixed;
     transform: rotate(180deg);
@@ -249,7 +249,7 @@
 
 .y-axis-label {
     font-size: 0.75rem;
-    color: #6b7280;
+    color: var(--text-secondary);
     text-align: right;
 }
 
@@ -278,19 +278,19 @@
     align-items: flex-start;
     margin-bottom: 1rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border);
 }
 
 .project-name {
     margin: 0 0 0.25rem 0;
-    color: #1f2937;
+    color: var(--text-primary);
     font-size: 1.25rem;
     font-weight: 600;
 }
 
 .project-file-name {
     margin: 0;
-    color: #6b7280;
+    color: var(--text-secondary);
     font-size: 0.875rem;
 }
 
@@ -308,19 +308,19 @@
 }
 
 .detail-label {
-    color: #6b7280;
+    color: var(--text-secondary);
     font-size: 0.875rem;
 }
 
 .detail-value {
-    color: #374151;
+    color: var(--text-primary);
     font-weight: 500;
 }
 
 .cost-value {
     font-size: 1.125rem;
     font-weight: 700;
-    color: #059669;
+    color: var(--success);
 }
 
 .project-card-breakdown {
@@ -328,7 +328,7 @@
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--border);
 }
 
 .breakdown-item {
@@ -339,7 +339,7 @@
 
 .breakdown-label {
     font-size: 0.75rem;
-    color: #9ca3af;
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -347,7 +347,7 @@
 .breakdown-value {
     font-size: 1rem;
     font-weight: 600;
-    color: #374151;
+    color: var(--text-primary);
 }
 
 /* Timeline Table */
@@ -384,12 +384,12 @@
 }
 
 .total-row {
-    background-color: #f9fafb;
+    background-color: var(--bg-subtle);
     font-weight: 600;
 }
 
 .total-row td {
-    border-top: 2px solid #d1d5db;
+    border-top: 2px solid var(--border-strong);
 }
 
 /* Comparison Controls */
@@ -401,30 +401,30 @@
 
 .comparison-controls label {
     font-weight: 500;
-    color: #374151;
+    color: var(--text-primary);
 }
 
 .comparison-select {
     padding: 0.5rem 1rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--border-strong);
     border-radius: 6px;
     background: white;
-    color: #374151;
+    color: var(--text-primary);
     font-size: 0.875rem;
     cursor: pointer;
 }
 
 .comparison-select:focus {
     outline: none;
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
 }
 
 /* Empty State */
 .empty-state {
     text-align: center;
     padding: 3rem 2rem;
-    color: #9ca3af;
+    color: var(--text-muted);
 }
 
 .empty-state svg {
@@ -467,21 +467,21 @@
 }
 
 .alert-success {
-    background-color: #ecfdf5;
-    color: #059669;
-    border: 1px solid #a7f3d0;
+    background-color: var(--success-bg);
+    color: var(--success);
+    border: 1px solid var(--success-border);
 }
 
 .alert-error {
-    background-color: #fef2f2;
-    color: #dc2626;
-    border: 1px solid #fecaca;
+    background-color: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid var(--danger-border);
 }
 
 .alert-info {
-    background-color: #eff6ff;
-    color: #2563eb;
-    border: 1px solid #bfdbfe;
+    background-color: var(--info-bg);
+    color: var(--info);
+    border: 1px solid var(--info-border);
 }
 
 /* Responsive Adjustments */
@@ -555,7 +555,7 @@
     .timeline-container,
     .comparison-container {
         box-shadow: none;
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--border);
         page-break-inside: avoid;
     }
 }
