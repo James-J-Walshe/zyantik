@@ -10,7 +10,8 @@ class PortfolioInitManager {
         this.modules = {
             portfolioManager: false,
             portfolioCostCalculator: false,
-            portfolioDashboard: false
+            portfolioDashboard: false,
+            analyticsManager: false
         };
         console.log('🚀 Portfolio Init Manager constructed');
     }
@@ -56,8 +57,18 @@ class PortfolioInitManager {
                 console.error('❌ Dashboard not available');
             }
 
-            // Step 5: Show welcome message
-            console.log('Step 5: Portfolio Application ready!');
+            // Step 5: Initialize Analytics Manager
+            // Runs after the UI modules so its event hooks find the rendered DOM
+            console.log('Step 5: Initializing Analytics Manager...');
+            if (this.modules.analyticsManager && typeof window.analyticsManager.initialize === 'function') {
+                window.analyticsManager.initialize();
+                console.log('✓ Analytics Manager initialized');
+            } else {
+                console.warn('⚠️ Analytics Manager not available - continuing without analytics');
+            }
+
+            // Step 6: Show welcome message
+            console.log('Step 6: Portfolio Application ready!');
             this.showWelcomeMessage();
 
             this.initialized = true;
@@ -83,6 +94,10 @@ class PortfolioInitManager {
         // Check Dashboard
         this.modules.portfolioDashboard = !!(window.portfolioDashboard);
         console.log(`  ${this.modules.portfolioDashboard ? '✓' : '❌'} Dashboard`);
+
+        // Check Analytics Manager
+        this.modules.analyticsManager = !!(window.analyticsManager || window.AnalyticsManager);
+        console.log(`  ${this.modules.analyticsManager ? '✓' : '❌'} Analytics Manager`);
 
         const allModulesLoaded = Object.values(this.modules).every(Boolean);
         if (!allModulesLoaded) {
