@@ -411,7 +411,7 @@ class AnalyticsManager {
         styles.textContent = `
             /* ================================================
                ANALYTICS CONSENT BANNER STYLES
-               Matches Zyantik dark navy theme
+               Driven by the shared design tokens in style.css
                ================================================ */
             
             .analytics-consent-banner {
@@ -436,15 +436,15 @@ class AnalyticsManager {
             }
 
             .consent-container {
-                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                color: #ffffff;
-                padding: 1.25rem 1.5rem;
+                background: var(--bg-surface);
+                color: var(--text-primary);
+                padding: var(--space-5) var(--space-6);
                 display: flex;
                 align-items: center;
-                gap: 1rem;
+                gap: var(--space-4);
                 max-width: 100%;
-                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: var(--shadow-lg);
+                border-top: 1px solid var(--border-strong);
                 position: relative;
             }
 
@@ -452,12 +452,12 @@ class AnalyticsManager {
                 flex-shrink: 0;
                 width: 40px;
                 height: 40px;
-                background: rgba(74, 144, 226, 0.2);
+                background: var(--brand-light);
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: #4a90e2;
+                color: var(--brand);
             }
 
             .consent-content {
@@ -467,58 +467,61 @@ class AnalyticsManager {
 
             .consent-title {
                 font-weight: 600;
-                font-size: 1rem;
-                margin-bottom: 0.25rem;
-                color: #ffffff;
+                font-size: var(--text-lg);
+                margin-bottom: var(--space-1);
+                color: var(--text-primary);
             }
 
             .consent-text {
-                font-size: 0.875rem;
-                color: rgba(255, 255, 255, 0.8);
+                font-size: var(--text-md);
+                color: var(--text-secondary);
                 line-height: 1.4;
             }
 
             .consent-actions {
                 display: flex;
-                gap: 0.75rem;
+                gap: var(--space-3);
                 flex-shrink: 0;
             }
 
             .consent-btn {
-                padding: 0.625rem 1.25rem;
-                border-radius: 6px;
-                font-size: 0.875rem;
+                padding: 0.625rem var(--space-5);
+                border-radius: var(--radius-md);
+                font-size: var(--text-md);
                 font-weight: 500;
                 cursor: pointer;
-                transition: all 0.2s ease;
-                border: none;
+                transition: background var(--transition), border-color var(--transition), color var(--transition);
+                border: 1px solid transparent;
                 white-space: nowrap;
-                font-family: inherit;
+                font-family: var(--font-base);
             }
 
             .consent-btn:focus {
-                outline: 2px solid #4a90e2;
+                outline: 2px solid var(--brand);
                 outline-offset: 2px;
             }
 
             .consent-btn-primary {
-                background: #4a90e2;
-                color: #ffffff;
+                background: var(--brand);
+                color: var(--text-on-brand);
+                border-color: var(--brand);
             }
 
             .consent-btn-primary:hover {
-                background: #357abd;
-                transform: translateY(-1px);
+                background: var(--brand-dark);
+                border-color: var(--brand-dark);
             }
 
             .consent-btn-secondary {
-                background: rgba(255, 255, 255, 0.1);
-                color: rgba(255, 255, 255, 0.9);
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                background: var(--bg-surface);
+                color: var(--zinc-600);
+                border: 1px solid var(--border);
             }
 
             .consent-btn-secondary:hover {
-                background: rgba(255, 255, 255, 0.15);
+                background: var(--bg-subtle);
+                border-color: var(--border-strong);
+                color: var(--text-primary);
             }
 
             .consent-close {
@@ -527,25 +530,25 @@ class AnalyticsManager {
                 right: 0.75rem;
                 width: 28px;
                 height: 28px;
-                background: rgba(255, 255, 255, 0.1);
+                background: var(--bg-subtle);
                 border: none;
                 border-radius: 50%;
-                color: rgba(255, 255, 255, 0.6);
+                color: var(--text-muted);
                 cursor: pointer;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                transition: all 0.2s ease;
+                transition: background var(--transition), color var(--transition);
                 padding: 0;
             }
 
             .consent-close:hover {
-                background: rgba(255, 255, 255, 0.2);
-                color: #ffffff;
+                background: var(--border);
+                color: var(--text-primary);
             }
 
             .consent-close:focus {
-                outline: 2px solid #4a90e2;
+                outline: 2px solid var(--brand);
                 outline-offset: 2px;
             }
 
