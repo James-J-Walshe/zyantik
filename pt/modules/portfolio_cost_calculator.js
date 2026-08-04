@@ -44,10 +44,32 @@ class PortfolioCostCalculator {
             };
         });
 
+        // Per-project running totals for each month, keyed by project id.
+        // Accumulated rather than pushed directly so that tool costs — which are
+        // distributed in a second pass below — land against the right project.
+        // Previously the projects[] entries omitted tool costs entirely, so they
+        // did not sum to the month total; the stacked timeline chart relies on
+        // them doing so.
+        const perProject = {};
+        Object.keys(monthlyCosts).forEach(key => { perProject[key] = {}; });
+
+        const addProjectCost = (monthKey, project, amount) => {
+            if (!amount || !perProject[monthKey]) return;
+            const id = project.id != null ? project.id : project.metadata.projectName;
+            if (!perProject[monthKey][id]) {
+                perProject[monthKey][id] = {
+                    id,
+                    name: project.metadata.projectName,
+                    cost: 0
+                };
+            }
+            perProject[monthKey][id].cost += amount;
+        };
+
         // Aggregate costs from each project
         projects.forEach(project => {
             const projectTimeline = this.getProjectTimeline(project);
-            
+
             projectTimeline.forEach((month, index) => {
                 const monthKey = month.key;
                 if (monthlyCosts[monthKey]) {
@@ -56,19 +78,13 @@ class PortfolioCostCalculator {
                     const internalCost = project.costs.internal.monthlyBreakdown[monthNum] || 0;
                     const externalCost = project.costs.external.monthlyBreakdown[monthNum] || 0;
                     const miscCost = project.costs.misc.monthlyBreakdown[monthNum] || 0;
-                    
+
                     // Add to portfolio month
                     monthlyCosts[monthKey].internal += internalCost;
                     monthlyCosts[monthKey].external += externalCost;
                     monthlyCosts[monthKey].misc += miscCost;
-                    
-                    // Track which projects contribute to this month
-                    if (internalCost + externalCost + miscCost > 0) {
-                        monthlyCosts[monthKey].projects.push({
-                            name: project.metadata.projectName,
-                            cost: internalCost + externalCost + miscCost
-                        });
-                    }
+
+                    addProjectCost(monthKey, project, internalCost + externalCost + miscCost);
                 }
             });
 
@@ -76,13 +92,21 @@ class PortfolioCostCalculator {
             if (project.costs.tools.total > 0) {
                 const projectMonths = projectTimeline.length;
                 const toolCostPerMonth = project.costs.tools.total / projectMonths;
-                
+
                 projectTimeline.forEach(month => {
                     if (monthlyCosts[month.key]) {
                         monthlyCosts[month.key].tools += toolCostPerMonth;
+                        addProjectCost(month.key, project, toolCostPerMonth);
                     }
                 });
             }
+        });
+
+        // Materialise the per-project contributions, largest first
+        Object.keys(monthlyCosts).forEach(key => {
+            monthlyCosts[key].projects = Object.values(perProject[key])
+                .filter(entry => entry.cost > 0)
+                .sort((a, b) => b.cost - a.cost);
         });
 
         // Calculate totals
