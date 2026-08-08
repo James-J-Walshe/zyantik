@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BA Tool | Zyantik</title>
+    <!-- Issue #6: explicit icon links; without these the browser requests
+         /favicon.ico on every page load and logs a 404. Absolute paths so
+         /cet/ and /pt/ resolve to the same site-root icon. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/assets/zyantik-logo.png">
+    <style>
+        /* Zinc / Teal design tokens mirrored from cet/style.css */
+        :root {
+            --brand:            #0d9488;
+            --brand-dark:       #0f766e;
+            --brand-light:      #f0fdfa;
+            --brand-border:     #99f6e4;
+            --zinc-50:          #fafafa;
+            --zinc-100:         #f4f4f5;
+            --zinc-200:         #e4e4e7;
+            --zinc-400:         #a1a1aa;
+            --zinc-500:         #71717a;
+            --zinc-900:         #18181b;
+            --warning:          #d97706;
+            --warning-bg:       #fffbeb;
+            --warning-border:   #fde68a;
+            --bg-page:          var(--zinc-50);
+            --bg-surface:       #ffffff;
+            --bg-subtle:        var(--zinc-100);
+            --border:           var(--zinc-200);
+            --text-primary:     var(--zinc-900);
+            --text-secondary:   var(--zinc-500);
+            --text-muted:       var(--zinc-400);
+            --font-base:        -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            --radius-md:        6px;
+            --radius-lg:        8px;
+            --shadow-sm:        0 1px 2px rgba(0,0,0,0.05);
+            --transition:       0.15s ease;
+            --header-height:    52px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-base);
+            font-size: 13px;
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            height: var(--header-height);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+
+        .apps-home-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            transition: background-color var(--transition), color var(--transition);
+        }
+
+        .apps-home-link:hover { background: var(--bg-subtle); color: var(--brand); }
+
+        .header-logo {
+            height: 30px;
+            padding: 0 8px;
+            background: var(--brand);
+            border-radius: var(--radius-md);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-logo img { height: 18px; width: auto; filter: brightness(0) invert(1); }
+
+        .header-title { font-size: 14px; font-weight: 600; }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 32px;
+        }
+
+        .panel h1 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+
+        .panel > p { color: var(--text-secondary); font-size: 14px; margin-bottom: 20px; }
+
+        .pipeline {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .pipeline .step {
+            background: var(--brand-light);
+            border: 1px solid var(--brand-border);
+            color: var(--brand-dark);
+            border-radius: var(--radius-md);
+            padding: 6px 12px;
+        }
+
+        .callout {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        .callout strong { color: var(--warning); }
+
+        .callout code {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-size: 12px;
+        }
+
+        .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: var(--radius-md);
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color var(--transition), color var(--transition), border-color var(--transition);
+        }
+
+        .btn-primary { background: var(--brand); color: #ffffff; }
+        .btn-primary:hover { background: var(--brand-dark); }
+
+        .btn-outline {
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover { border-color: var(--brand); color: var(--brand-dark); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <a class="apps-home-link" href="/apps/" title="Zyantik Apps home">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><g fill="currentColor">
+                    <circle cx="5" cy="5" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="5" r="2"/>
+                    <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
+                    <circle cx="5" cy="19" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="19" cy="19" r="2"/>
+                </g></svg>
+            </a>
+            <div class="header-logo">
+                <img src="/assets/zyantik-logo.png" alt="Zyantik Logo">
+            </div>
+            <h1 class="header-title">BA Tool</h1>
+        </div>
+    </header>
+
+    <main>
+        <div class="panel">
+            <h1>Business Analysis Tool</h1>
+            <p>Turn raw project inputs into structured BA artefacts. Import documents into a reference library, analyse them with AI, and publish the results straight to a Miro board.</p>
+
+            <div class="pipeline">
+                <span class="step">Import</span> &#8594;
+                <span class="step">Reference library</span> &#8594;
+                <span class="step">AI analysis</span> &#8594;
+                <span class="step">Publish to Miro</span>
+            </div>
+
+            <div class="callout">
+                <strong>Local beta.</strong> The BA Tool currently runs on your own machine while hosted access is being built.
+                Start it with <code>python -m ba_tool serve</code>, then use the button below to open it.
+            </div>
+
+            <div class="actions">
+                <a class="btn btn-primary" href="http://localhost:8642/">Open BA Tool (local) &#8594;</a>
+                <a class="btn btn-outline" href="https://github.com/James-J-Walshe/ba-tool" target="_blank" rel="noopener">View on GitHub &#8599;</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

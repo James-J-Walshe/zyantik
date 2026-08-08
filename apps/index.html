@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zyantik Apps</title>
+    <!-- Issue #6: explicit icon links; without these the browser requests
+         /favicon.ico on every page load and logs a 404. Absolute paths so
+         /cet/ and /pt/ resolve to the same site-root icon. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/assets/zyantik-logo.png">
+    <style>
+        /* Zinc / Teal design tokens mirrored from cet/style.css */
+        :root {
+            --brand:            #0d9488;
+            --brand-dark:       #0f766e;
+            --brand-light:      #f0fdfa;
+            --brand-border:     #99f6e4;
+            --zinc-50:          #fafafa;
+            --zinc-100:         #f4f4f5;
+            --zinc-200:         #e4e4e7;
+            --zinc-300:         #d4d4d8;
+            --zinc-400:         #a1a1aa;
+            --zinc-500:         #71717a;
+            --zinc-900:         #18181b;
+            --bg-page:          var(--zinc-50);
+            --bg-surface:       #ffffff;
+            --bg-subtle:        var(--zinc-100);
+            --border:           var(--zinc-200);
+            --text-primary:     var(--zinc-900);
+            --text-secondary:   var(--zinc-500);
+            --text-muted:       var(--zinc-400);
+            --font-base:        -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            --radius-md:        6px;
+            --radius-lg:        8px;
+            --radius-pill:      999px;
+            --shadow-sm:        0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md:        0 4px 12px rgba(0,0,0,0.08);
+            --transition:       0.15s ease;
+            --header-height:    52px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-base);
+            font-size: 13px;
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            height: var(--header-height);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+
+        .header-logo {
+            height: 30px;
+            padding: 0 8px;
+            background: var(--brand);
+            border-radius: var(--radius-md);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-logo img { height: 18px; width: auto; filter: brightness(0) invert(1); }
+
+        .header-title { font-size: 14px; font-weight: 600; }
+
+        .site-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: var(--radius-md);
+            transition: background-color var(--transition), color var(--transition);
+        }
+
+        .site-link:hover { background: var(--bg-subtle); color: var(--brand); }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .page-heading { text-align: center; margin-bottom: 40px; }
+        .page-heading h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .page-heading p { color: var(--text-secondary); font-size: 14px; }
+
+        .tile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .tile {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+        }
+
+        .tile:hover {
+            border-color: var(--brand-border);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .tile-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background: var(--brand-light);
+            border: 1px solid var(--brand-border);
+            color: var(--brand-dark);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tile h2 { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+
+        .tile p { color: var(--text-secondary); flex: 1; }
+
+        .tile-open { color: var(--brand-dark); font-weight: 600; font-size: 12px; }
+
+        .badge {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--zinc-500);
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-pill);
+            padding: 2px 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <div class="header-logo">
+                <img src="/assets/zyantik-logo.png" alt="Zyantik Logo">
+            </div>
+            <h1 class="header-title">Zyantik Apps</h1>
+        </div>
+        <a class="site-link" href="/">zyantik.com &#8594;</a>
+    </header>
+
+    <main>
+        <div class="page-heading">
+            <h1>Applications</h1>
+            <p>Pick a tool to get started.</p>
+        </div>
+
+        <div class="tile-grid">
+            <a class="tile" href="/cet/">
+                <div class="tile-icon">
+                    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+                        <path d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V12H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M15,14V16H17V14H15M7,18V20H9V18H7M11,18V20H13V18H11M15,18V20H17V18H15Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h2>Cost Modelling Tool</h2>
+                <p>Estimate ICT project costs across internal resources, contractors, vendors and tools, with timelines, currencies and contingency built in.</p>
+                <span class="tile-open">Open &#8594;</span>
+            </a>
+
+            <a class="tile" href="/pt/">
+                <div class="tile-icon">
+                    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+                        <path d="M13,3V9H21V3M13,21H21V11H13M3,21H11V15H3M3,13H11V3H3V13Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h2>Portfolio Cost Management</h2>
+                <p>Roll individual project estimates up into a portfolio-level dashboard to compare, prioritise and track costs across your programme.</p>
+                <span class="tile-open">Open &#8594;</span>
+            </a>
+
+            <a class="tile" href="/ba/">
+                <div class="tile-icon">
+                    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+                        <path d="M17,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H7A2,2 0 0,0 5,5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V5A2,2 0 0,0 17,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M7,7H17V5H19V19H5V5H7V7M7,9V11H17V9H7M7,13V15H14V13H7Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h2>BA Tool <span class="badge">Local beta</span></h2>
+                <p>Import transcripts, forms and manuals into a reference library, run AI analysis to extract BA artefacts, and publish the results to Miro.</p>
+                <span class="tile-open">Open &#8594;</span>
+            </a>
+        </div>
+    </main>
+
+    <footer>&copy; Zyantik &middot; <a class="site-link" href="/">Back to zyantik.com</a></footer>
+</body>
+</html>

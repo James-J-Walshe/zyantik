@@ -152,6 +152,24 @@ header {
     flex: 1;
 }
 
+/* 3x3 dot launcher linking back to the Zyantik apps home page */
+.apps-home-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    transition: background-color var(--transition), color var(--transition);
+}
+
+.apps-home-link:hover {
+    background: var(--bg-subtle);
+    color: var(--brand);
+}
+
 .header-logo {
     flex-shrink: 0;
     height: 30px;
